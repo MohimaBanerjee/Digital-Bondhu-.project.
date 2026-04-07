@@ -1,0 +1,1227 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Digital Bandhu — Sentinel</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#07080f; --sf:#0d0f1a; --sf2:#131525; --sf3:#1a1d30;
+  --bd:#1e2238; --bd2:#272b44;
+  --tx:#e8ebff; --t2:#8891b8; --mt:#3d4468;
+  --ac:#6366f1; --ac2:#8b5cf6; --acbg:rgba(99,102,241,.12);
+  --gn:#10b981; --gnbg:rgba(16,185,129,.1); --gnbd:rgba(16,185,129,.3);
+  --yl:#f59e0b; --ylbg:rgba(245,158,11,.1); --ylbd:rgba(245,158,11,.3);
+  --rd:#ef4444; --rdbg:rgba(239,68,68,.1); --rdbd:rgba(239,68,68,.3);
+  --bl:#3b82f6;
+  --sh:0 1px 3px rgba(0,0,0,.4);
+  --sh2:0 8px 32px rgba(0,0,0,.5);
+  --r:10px;
+  --fn:'Syne',sans-serif; --mono:'Space Mono',monospace;
+}
+[data-theme="light"] {
+  --bg:#f1f3fb; --sf:#ffffff; --sf2:#f7f8fd; --sf3:#eef0f9;
+  --bd:#dde1f0; --bd2:#c5cae0;
+  --tx:#0c0e1c; --t2:#4a5275; --mt:#9099bf;
+  --acbg:rgba(99,102,241,.08);
+  --gnbg:rgba(16,185,129,.07); --gnbd:rgba(16,185,129,.25);
+  --ylbg:rgba(245,158,11,.07); --ylbd:rgba(245,158,11,.25);
+  --rdbg:rgba(239,68,68,.07); --rdbd:rgba(239,68,68,.25);
+  --sh:0 1px 3px rgba(0,0,0,.06);
+  --sh2:0 8px 24px rgba(0,0,0,.08);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;font-family:var(--fn);background:var(--bg);color:var(--tx);font-size:14px;line-height:1.6;transition:background .2s,color .2s}
+button,input,textarea,select{font-family:inherit}
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-thumb{background:var(--bd2);border-radius:3px}
+
+/* ── ONBOARD ── */
+#ob{position:fixed;inset:0;z-index:9999;background:var(--bg);display:flex;align-items:center;justify-content:center;overflow:hidden}
+.ob-glow{position:absolute;width:600px;height:600px;border-radius:50%;pointer-events:none}
+.ob-glow1{background:radial-gradient(circle,rgba(99,102,241,.15),transparent 65%);top:-100px;left:-100px;animation:glowFloat 9s ease-in-out infinite}
+.ob-glow2{background:radial-gradient(circle,rgba(139,92,246,.12),transparent 65%);bottom:-100px;right:-100px;animation:glowFloat 11s ease-in-out infinite reverse}
+@keyframes glowFloat{0%,100%{transform:translate(0,0)}50%{transform:translate(30px,20px)}}
+.ob-card{position:relative;z-index:1;width:100%;max-width:420px;background:var(--sf);border:1px solid var(--bd2);border-radius:20px;padding:40px;box-shadow:0 40px 80px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.05);animation:cardIn .5s cubic-bezier(.34,1.4,.64,1)}
+@keyframes cardIn{from{opacity:0;transform:translateY(24px) scale(.96)}to{opacity:1;transform:none}}
+
+/* logo */
+.ob-logo{text-align:center;margin-bottom:28px}
+.ob-shield{position:relative;width:72px;height:72px;margin:0 auto 14px;display:flex;align-items:center;justify-content:center}
+.ob-ring-outer{position:absolute;inset:0;border-radius:50%;border:2px solid transparent;background:conic-gradient(from 0deg,#6366f1,#8b5cf6,#06b6d4,#6366f1) border-box;-webkit-mask:linear-gradient(#fff 0 0) padding-box,linear-gradient(#fff 0 0);-webkit-mask-composite:destination-out;mask-composite:exclude;animation:spin 4s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.ob-shield-inner{width:62px;height:62px;background:linear-gradient(135deg,#1a1c38,#0d0f20);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;border:1px solid rgba(99,102,241,.3);box-shadow:0 0 24px rgba(99,102,241,.2),inset 0 0 16px rgba(99,102,241,.08);position:relative;z-index:1}
+.ob-pulse{position:absolute;inset:-10px;border-radius:50%;background:radial-gradient(circle,rgba(99,102,241,.12),transparent 70%);animation:pulse 2.5s ease-in-out infinite}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:.5}50%{transform:scale(1.1);opacity:1}}
+.ob-title{font-size:24px;font-weight:800;color:var(--tx);letter-spacing:-.3px}
+.ob-title em{font-style:normal;background:linear-gradient(90deg,#818cf8,#a78bfa,#67e8f9);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.ob-tagline{font-size:10px;color:var(--t2);font-family:var(--mono);letter-spacing:.1em;text-transform:uppercase;margin-top:4px}
+
+/* form */
+.ob-label{display:block;font-size:9px;font-weight:700;color:var(--t2);letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px;font-family:var(--mono)}
+.ob-req{color:rgba(239,68,68,.7);margin-left:3px}
+.ob-input{width:100%;background:var(--sf2);border:1.5px solid var(--bd);border-radius:8px;color:var(--tx);font-size:13px;padding:11px 14px;outline:none;transition:all .2s;display:block;margin-bottom:12px;font-family:var(--mono)}
+.ob-input:focus{border-color:var(--ac);background:var(--acbg);box-shadow:0 0 0 3px rgba(99,102,241,.15)}
+.ob-input::placeholder{color:var(--mt)}
+.ob-input.err{border-color:var(--rd)}
+.ob-or{display:flex;align-items:center;gap:8px;color:var(--mt);font-size:10px;font-family:var(--mono);margin:4px 0 12px}
+.ob-or::before,.ob-or::after{content:'';flex:1;height:1px;background:var(--bd)}
+.ob-cta{width:100%;padding:13px;background:linear-gradient(135deg,var(--ac),var(--ac2));color:#fff;border:none;border-radius:9px;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;box-shadow:0 4px 18px rgba(99,102,241,.35);font-family:var(--fn)}
+.ob-cta:hover{transform:translateY(-2px);box-shadow:0 8px 26px rgba(99,102,241,.5)}
+.ob-cta:active{transform:translateY(0)}
+.ob-skip{display:block;text-align:center;margin-top:10px;font-size:11px;color:var(--mt);cursor:pointer;font-family:var(--mono);transition:color .15s}
+.ob-skip:hover{color:var(--t2)}
+.ob-err{font-size:11px;color:var(--rd);min-height:14px;margin-bottom:8px;font-family:var(--mono)}
+.ob-credits{margin-top:20px;padding-top:16px;border-top:1px solid var(--bd);text-align:center}
+.ob-by{font-size:12px;color:var(--t2);font-weight:600}
+.ob-by strong{color:var(--tx)}
+.ob-dev{font-size:10px;color:var(--mt);font-family:var(--mono);margin-top:3px}
+.ob-hide{opacity:0;pointer-events:none;transition:opacity .3s}
+
+/* ── SHELL ── */
+.shell{display:flex;height:100vh;overflow:hidden}
+
+/* ── SIDEBAR ── */
+.sb{width:220px;background:var(--sf);border-right:1px solid var(--bd);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto}
+.sb-brand{padding:18px 16px;border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:10px}
+.sb-ico{width:32px;height:32px;background:linear-gradient(135deg,var(--ac),var(--ac2));border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.sb-name{font-size:13px;font-weight:800;color:var(--tx)}
+.sb-ver{font-size:9px;color:var(--mt);font-family:var(--mono);letter-spacing:.04em}
+.sb-section{padding:14px 10px 2px}
+.sb-sec-lbl{font-size:9px;font-weight:700;color:var(--mt);letter-spacing:.12em;text-transform:uppercase;padding:0 8px;margin-bottom:4px}
+.nav{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:7px;cursor:pointer;color:var(--t2);font-size:13px;font-weight:500;transition:all .13s;margin-bottom:2px;position:relative}
+.nav:hover{background:var(--acbg);color:var(--ac)}
+.nav.on{background:var(--acbg);color:var(--ac);font-weight:700}
+.nav.on::before{content:'';position:absolute;left:-10px;top:50%;transform:translateY(-50%);width:3px;height:16px;background:var(--ac);border-radius:0 3px 3px 0}
+.nav-i{font-size:14px;width:18px;text-align:center;flex-shrink:0}
+.nbadge{margin-left:auto;font-size:9px;font-weight:700;padding:1px 6px;border-radius:6px;font-family:var(--mono)}
+.nb-r{background:var(--rdbg);color:var(--rd);border:1px solid var(--rdbd)}
+.nb-b{background:var(--acbg);color:var(--ac);border:1px solid rgba(99,102,241,.3)}
+.sb-bottom{margin-top:auto;padding:10px;border-top:1px solid var(--bd)}
+.sb-user{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:8px;cursor:pointer;transition:background .13s}
+.sb-user:hover{background:var(--sf2)}
+.sb-av{width:30px;height:30px;background:linear-gradient(135deg,var(--ac),var(--ac2));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff;font-weight:700;flex-shrink:0;font-family:var(--mono)}
+.sb-uname{font-size:12px;font-weight:700;color:var(--tx)}
+.sb-urole{font-size:9px;color:var(--mt);font-family:var(--mono)}
+
+/* ── BODY ── */
+.body{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
+.topbar{height:48px;background:var(--sf);border-bottom:1px solid var(--bd);display:flex;align-items:center;padding:0 20px;gap:10px;flex-shrink:0}
+.tb-title{font-size:13px;font-weight:700;color:var(--tx)}
+.tb-sep{width:1px;height:14px;background:var(--bd);flex-shrink:0}
+.tb-search{flex:1;max-width:240px;display:flex;align-items:center;gap:7px;background:var(--sf2);border:1px solid var(--bd);border-radius:7px;padding:5px 10px}
+.tb-search input{border:none;outline:none;background:transparent;font-size:12px;color:var(--tx);width:100%;font-family:var(--mono)}
+.tb-search input::placeholder{color:var(--mt)}
+.tb-right{margin-left:auto;display:flex;align-items:center;gap:6px}
+.tb-live{display:flex;align-items:center;gap:5px;background:var(--gnbg);border:1px solid var(--gnbd);border-radius:20px;padding:4px 10px;font-size:10px;color:var(--gn);font-weight:700;font-family:var(--mono)}
+.tb-dot{width:5px;height:5px;border-radius:50%;background:var(--gn);animation:blink 2s infinite;flex-shrink:0}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.15}}
+.tb-clock{font-family:var(--mono);font-size:11px;color:var(--mt);background:var(--sf2);border:1px solid var(--bd);border-radius:5px;padding:3px 8px}
+.tbtn{width:28px;height:28px;border:1px solid var(--bd);border-radius:6px;background:var(--sf);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:12px;transition:all .13s;flex-shrink:0}
+.tbtn:hover{background:var(--acbg);border-color:var(--ac)}
+
+/* ── WORKSPACE ── */
+.ws{flex:1;overflow-y:auto;background:var(--bg)}
+.inner{padding:20px 24px 60px;max-width:1360px;margin:0 auto}
+.page{display:none}
+.page.on{display:block;animation:fi .18s ease}
+@keyframes fi{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.foot{padding:10px 20px;border-top:1px solid var(--bd);background:var(--sf);display:flex;align-items:center;justify-content:space-between;font-size:10px;color:var(--mt);flex-shrink:0;font-family:var(--mono)}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:20px;right:20px;background:var(--tx);color:var(--bg);padding:9px 16px;border-radius:8px;font-size:12px;font-weight:700;z-index:9000;display:none;box-shadow:var(--sh2);font-family:var(--mono)}
+.toast.on{display:block;animation:fi .2s ease}
+
+/* ── PAGE HEADER ── */
+.ph{margin-bottom:18px}
+.ph h2{font-size:20px;font-weight:800;color:var(--tx);margin-bottom:2px;letter-spacing:-.3px}
+.ph p{font-size:12px;color:var(--t2)}
+.ph-row{display:flex;align-items:center;justify-content:space-between}
+
+/* ── HERO ── */
+.hero{background:linear-gradient(135deg,#0d0f20 0%,#151730 50%,#0a0c1e 100%);border:1px solid var(--bd2);border-radius:var(--r);padding:26px 30px;margin-bottom:16px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:space-between;gap:20px}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 55% 80% at 5% 50%,rgba(99,102,241,.18),transparent),radial-gradient(ellipse 40% 60% at 90% 10%,rgba(139,92,246,.12),transparent);pointer-events:none}
+.hero-left{position:relative;z-index:1}
+.hero-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(99,102,241,.18);border:1px solid rgba(99,102,241,.3);border-radius:20px;padding:3px 10px;font-size:9px;font-weight:700;color:#a5b4fc;font-family:var(--mono);letter-spacing:.07em;margin-bottom:10px}
+.hero-title{font-size:28px;font-weight:800;color:#fff;line-height:1.2;letter-spacing:-.4px;margin-bottom:7px}
+.hero-title span{background:linear-gradient(90deg,#818cf8,#c4b5fd);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-desc{font-size:12px;color:rgba(255,255,255,.38);max-width:320px;line-height:1.7;font-family:var(--mono)}
+.hero-stats{display:flex;gap:10px;flex-shrink:0;position:relative;z-index:1}
+.hstat{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:9px;padding:12px 16px;text-align:center;min-width:72px}
+.hstat-v{font-size:20px;font-weight:800;font-family:var(--mono);line-height:1;color:#fff}
+.hstat-v.g{color:#34d399}.hstat-v.b{color:#818cf8}.hstat-v.r{color:#f87171}
+.hstat-l{font-size:9px;color:rgba(255,255,255,.3);margin-top:3px;letter-spacing:.05em;font-family:var(--mono)}
+.alert-bar{background:var(--ylbg);border:1px solid var(--ylbd);border-radius:8px;padding:9px 14px;display:flex;align-items:center;gap:8px;margin-bottom:16px;font-size:12px;color:var(--yl);font-family:var(--mono)}
+
+/* ── DASHBOARD LAYOUT ── */
+.dash-wrap{display:grid;grid-template-columns:1fr 290px;gap:16px;align-items:start}
+.scope-row{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.scope-lbl{font-size:11px;color:var(--t2);font-weight:600}
+.scope-tabs{display:flex;background:var(--sf);border:1px solid var(--bd);border-radius:8px;padding:3px;gap:2px}
+.stab{padding:5px 12px;border-radius:5px;font-size:11px;font-weight:600;cursor:pointer;color:var(--t2);transition:all .13s}
+.stab.on{background:var(--ac);color:#fff}
+.stab:hover:not(.on){color:var(--tx)}
+
+/* ── MODULE CARDS ── */
+.mods{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.mod{background:var(--sf);border:1.5px solid var(--bd);border-radius:var(--r);overflow:hidden;transition:border-color .13s}
+.mod:hover{border-color:var(--bd2)}
+.mod.hid{display:none}
+.mod-hd{padding:12px 13px;background:var(--sf2);border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:9px}
+.mod-ico{width:32px;height:32px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.mod-name{font-size:11px;font-weight:800;color:var(--tx);line-height:1.3}
+.mod-desc{font-size:10px;color:var(--t2);margin-top:1px}
+.mod-scope{margin-left:auto;font-size:8px;font-weight:800;padding:2px 6px;border-radius:3px;font-family:var(--mono);letter-spacing:.05em;flex-shrink:0}
+.sc-n{background:rgba(59,130,246,.12);color:#60a5fa;border:1px solid rgba(59,130,246,.25)}
+.sc-i{background:var(--acbg);color:#a78bfa;border:1px solid rgba(99,102,241,.25)}
+.sc-b{background:rgba(16,185,129,.1);color:#34d399;border:1px solid rgba(16,185,129,.2)}
+.mod-body{padding:12px 13px}
+.inp-lbl{font-size:9px;font-weight:700;color:var(--mt);letter-spacing:.08em;text-transform:uppercase;display:block;margin-bottom:4px;font-family:var(--mono)}
+
+/* inputs */
+.inp-ta,.inp-si{width:100%;background:var(--sf2);border:1.5px solid var(--bd);border-radius:7px;color:var(--tx);font-family:var(--mono);font-size:12px;padding:8px 10px;outline:none;transition:border-color .15s;display:block}
+.inp-ta{resize:vertical;min-height:76px;line-height:1.6}
+.inp-ta:focus,.inp-si:focus{border-color:var(--ac)}
+.inp-ta::placeholder,.inp-si::placeholder{color:var(--mt)}
+.inp-ta.err,.inp-si.err{border-color:var(--rd)!important}
+.up-box{border:1.5px dashed var(--bd2);border-radius:7px;padding:18px;text-align:center;cursor:pointer;transition:all .15s;background:var(--sf2)}
+.up-box:hover{border-color:var(--ac);background:var(--acbg)}
+.up-box.got{border-color:var(--gn);border-style:solid;background:var(--gnbg)}
+.up-ico{font-size:18px;margin-bottom:3px}
+.up-txt{font-size:11px;color:var(--t2);font-family:var(--mono)}
+.up-sub{font-size:10px;color:var(--mt);margin-top:1px}
+.act-row{display:flex;gap:6px;margin-top:9px}
+.scan-btn{flex:1;padding:8px;background:var(--ac);color:#fff;border:none;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;transition:all .13s;display:flex;align-items:center;justify-content:center;gap:5px;font-family:var(--fn)}
+.scan-btn:hover{background:var(--ac2);box-shadow:0 4px 14px rgba(99,102,241,.3)}
+.scan-btn:disabled{opacity:.35;cursor:not-allowed}
+.clr-btn{padding:8px 12px;background:var(--sf2);border:1.5px solid var(--bd);border-radius:7px;font-size:11px;font-weight:700;color:var(--t2);cursor:pointer;transition:all .13s;white-space:nowrap;font-family:var(--fn)}
+.clr-btn:hover{border-color:var(--rd);color:var(--rd)}
+.err-msg{font-size:11px;color:var(--rd);margin-top:7px;display:none;background:var(--rdbg);border:1px solid var(--rdbd);border-radius:6px;padding:6px 10px;font-family:var(--mono)}
+.err-msg.on{display:block}
+.scanning{display:none;align-items:center;gap:7px;margin-top:9px;font-size:11px;color:var(--t2);font-family:var(--mono)}
+.scanning.on{display:flex}
+.spin{width:12px;height:12px;border:1.5px solid var(--bd2);border-top-color:var(--ac);border-radius:50%;animation:spin .65s linear infinite}
+.result{margin-top:10px;border:1px solid var(--bd);border-radius:9px;overflow:hidden;display:none;animation:fi .2s ease}
+.result.on{display:block}
+.res-top{padding:11px 13px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--bd)}
+.res-sc{font-size:24px;font-weight:800;font-family:var(--mono);line-height:1}
+.rs-s{color:var(--gn)}.rs-m{color:var(--yl)}.rs-h{color:var(--rd)}
+.res-badge{font-size:9px;font-weight:800;padding:4px 10px;border-radius:4px;letter-spacing:.06em;font-family:var(--mono)}
+.rb-s{background:var(--gnbg);color:var(--gn);border:1px solid var(--gnbd)}
+.rb-m{background:var(--ylbg);color:var(--yl);border:1px solid var(--ylbd)}
+.rb-h{background:var(--rdbg);color:var(--rd);border:1px solid var(--rdbd)}
+.res-bar{height:2px;background:var(--bd)}
+.res-fill{height:100%;transition:width 1s cubic-bezier(.4,0,.2,1)}
+.rf-s{background:var(--gn)}.rf-m{background:var(--yl)}.rf-h{background:var(--rd)}
+.res-body{padding:11px 13px}
+.res-lbl{font-size:9px;font-weight:700;color:var(--mt);letter-spacing:.08em;text-transform:uppercase;margin-bottom:5px;font-family:var(--mono)}
+.tags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:9px}
+.tag{font-size:10px;padding:2px 7px;border-radius:3px;font-family:var(--mono);border:1px solid}
+.tag-s{color:var(--gn);border-color:var(--gnbd);background:var(--gnbg)}
+.tag-m{color:var(--yl);border-color:var(--ylbd);background:var(--ylbg)}
+.tag-h{color:var(--rd);border-color:var(--rdbd);background:var(--rdbg)}
+.res-action{padding:8px 11px;border-radius:6px;font-size:11px;line-height:1.65;border-left:2px solid;font-family:var(--mono)}
+.ra-s{background:var(--gnbg);border-color:var(--gn);color:var(--gn)}
+.ra-m{background:var(--ylbg);border-color:var(--yl);color:var(--yl)}
+.ra-h{background:var(--rdbg);border-color:var(--rd);color:var(--rd)}
+
+/* ── RIGHT COLUMN ── */
+.rcol{display:flex;flex-direction:column;gap:12px}
+.rp{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);overflow:hidden}
+.rp-hd{padding:11px 14px;border-bottom:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between}
+.rp-ttl{font-size:12px;font-weight:800;color:var(--tx)}
+.rpill{font-size:9px;font-weight:700;padding:2px 7px;border-radius:3px;font-family:var(--mono)}
+.rp-body{padding:12px 14px}
+.feed-row{display:flex;align-items:flex-start;gap:8px;padding:6px 0;border-bottom:1px solid var(--bd)}
+.feed-row:last-child{border-bottom:none}
+.fdot{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:5px}
+.fd-g{background:var(--gn)}.fd-r{background:var(--rd)}.fd-y{background:var(--yl)}
+.fval{font-family:var(--mono);font-size:11px;color:var(--tx);font-weight:500;word-break:break-all}
+.ftime{font-size:10px;color:var(--mt)}
+.tc{border-radius:8px;padding:11px;color:#fff;margin-bottom:8px;background:linear-gradient(135deg,#1a1c3e,#252760)}
+.tc:last-child{margin-bottom:0}
+.tc-tag{font-size:9px;font-weight:700;color:#a5b4fc;font-family:var(--mono);letter-spacing:.06em;margin-bottom:3px}
+.tc-ttl{font-size:12px;font-weight:800;color:#fff;margin-bottom:2px}
+.tc-desc{font-size:11px;color:rgba(255,255,255,.45);line-height:1.5}
+.qr{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--bd);font-size:11px}
+.qr:last-child{border-bottom:none}
+.qn{flex:1;font-weight:600;color:var(--tx)}
+.ql{font-family:var(--mono);font-size:10px;color:var(--ac)}
+.qsev{font-size:9px;font-weight:700;padding:2px 6px;border-radius:3px;font-family:var(--mono)}
+.qs-h{background:var(--rdbg);color:var(--rd)}.qs-m{background:var(--ylbg);color:var(--yl)}
+
+/* ── INTELLIGENCE ── */
+.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+.stat-c{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:14px}
+.sc-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.sc-ttl{font-size:11px;font-weight:700;color:var(--tx)}
+.sc-val{font-size:22px;font-weight:800;font-family:var(--mono);color:var(--ac);margin-bottom:2px}
+.sc-sub{font-size:11px;color:var(--t2)}
+.sc-bar{height:2px;background:var(--bd);border-radius:2px;overflow:hidden;margin-top:8px}
+.sc-fill{height:100%;border-radius:2px;transition:width 1.2s}
+.thr-grid{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:16px}
+.tr-row{display:flex;gap:12px;padding:11px 12px;border-radius:8px;border:1px solid var(--bd);background:var(--sf2);margin-bottom:8px;transition:border-color .13s}
+.tr-row:last-child{margin-bottom:0}
+.tr-row:hover{border-color:var(--bd2)}
+.tr-ico{font-size:18px;flex-shrink:0}
+.tr-name{font-size:12px;font-weight:700;color:var(--tx);margin-bottom:2px}
+.tr-desc{font-size:11px;color:var(--t2);line-height:1.55}
+.tr-right{text-align:right;flex-shrink:0}
+.tr-lv{font-size:9px;font-weight:700;padding:2px 6px;border-radius:3px;font-family:var(--mono);display:block;margin-bottom:2px}
+.tr-time{font-size:10px;color:var(--mt);font-family:var(--mono)}
+
+/* ── LAWS ── */
+.law-tabs{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:14px}
+.ltab{font-size:11px;font-weight:600;padding:6px 13px;border-radius:6px;border:1px solid var(--bd);color:var(--t2);cursor:pointer;transition:all .13s;background:var(--sf)}
+.ltab:hover{border-color:var(--ac);color:var(--ac)}
+.ltab.on{background:var(--ac);color:#fff;border-color:var(--ac)}
+.lpan{display:none}
+.lpan.on{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;animation:fi .18s}
+.lc{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:14px}
+.lc:hover{border-color:var(--bd2)}
+.lc-hd{display:flex;justify-content:space-between;gap:8px;margin-bottom:6px}
+.lc-ttl{font-size:12px;font-weight:800;color:var(--tx)}
+.lc-yr{font-size:10px;color:var(--mt);font-family:var(--mono);flex-shrink:0}
+.lc-desc{font-size:11px;color:var(--t2);line-height:1.65;margin-bottom:7px}
+.lc-act{font-size:11px;color:var(--ac);background:var(--acbg);border-radius:6px;padding:7px 10px;border-left:2px solid var(--ac);line-height:1.6;font-family:var(--mono)}
+.lc-act strong{display:block;font-size:9px;opacity:.6;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px;font-family:var(--fn)}
+.lc-tags{display:flex;flex-wrap:wrap;gap:4px;align-items:center;margin-top:8px}
+.lpl{font-family:var(--mono);font-size:9px;padding:2px 6px;border-radius:3px;background:var(--acbg);color:var(--ac);border:1px solid rgba(99,102,241,.2)}
+.lpen{font-family:var(--mono);font-size:9px;color:var(--rd);margin-left:auto}
+
+/* ── NUMBERS ── */
+.qdial-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
+.qdial{display:flex;align-items:center;gap:7px;padding:10px 16px;border:none;border-radius:9px;color:#fff;font-size:13px;font-weight:700;cursor:pointer;box-shadow:0 3px 12px rgba(0,0,0,.2);transition:transform .13s;font-family:var(--fn)}
+.qdial:hover{transform:translateY(-2px)}
+.qdial:active{transform:none}
+.qdial span{font-size:10px;opacity:.65;font-weight:500}
+.num-2col{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.num-sec-lbl{font-size:9px;font-weight:700;color:var(--mt);letter-spacing:.1em;text-transform:uppercase;font-family:var(--mono);margin-bottom:9px;padding-bottom:7px;border-bottom:1px solid var(--bd)}
+.ni{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;border:1px solid var(--bd);margin-bottom:8px;background:var(--sf);transition:border-color .13s}
+.ni:hover{border-color:var(--ac)}
+.ni-ico{font-size:18px;flex-shrink:0}
+.ni-num{font-family:var(--mono);font-size:12px;font-weight:700;color:var(--ac)}
+.ni-name{font-size:11px;font-weight:700;color:var(--tx)}
+.ni-sub{font-size:10px;color:var(--mt)}
+.ni-btn{margin-left:auto;border:none;border-radius:5px;font-size:10px;font-weight:700;padding:5px 11px;cursor:pointer;flex-shrink:0;transition:opacity .13s;font-family:var(--fn)}
+.ni-btn:hover{opacity:.82}
+
+/* call modal */
+.cm-bg{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9999;display:flex;align-items:center;justify-content:center;animation:fi .15s}
+.cm-box{background:var(--sf);border:1px solid var(--bd2);border-radius:16px;padding:28px 30px;text-align:center;max-width:300px;width:90%;box-shadow:var(--sh2)}
+.cm-ico{font-size:36px;margin-bottom:9px}
+.cm-lbl{font-size:10px;color:var(--mt);font-family:var(--mono);letter-spacing:.08em;text-transform:uppercase;margin-bottom:5px}
+.cm-num{font-size:30px;font-weight:800;color:var(--ac);font-family:var(--mono);margin-bottom:5px}
+.cm-sub{font-size:11px;color:var(--t2);font-family:var(--mono);margin-bottom:18px}
+.cm-btns{display:flex;gap:8px}
+.cm-call{flex:1;padding:11px;background:var(--ac);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:5px;transition:opacity .13s;font-family:var(--fn)}
+.cm-call:hover{opacity:.88}
+.cm-close{flex:1;padding:11px;background:var(--sf2);border:1.5px solid var(--bd);border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;color:var(--t2);transition:all .13s;font-family:var(--fn)}
+.cm-close:hover{border-color:var(--rd);color:var(--rd)}
+
+/* ── HISTORY ── */
+.hi{display:flex;align-items:center;gap:11px;padding:10px 13px;border:1px solid var(--bd);border-radius:8px;margin-bottom:8px;background:var(--sf)}
+.hi-ico{font-size:16px;flex-shrink:0}
+.hi-type{font-size:12px;font-weight:700;color:var(--tx)}
+.hi-inp{font-size:10px;color:var(--mt);font-family:var(--mono);margin-top:1px;word-break:break-all}
+.hi-sc{font-weight:800;font-size:15px;font-family:var(--mono)}
+.hi-time{font-size:10px;color:var(--mt);font-family:var(--mono);flex-shrink:0}
+.empty{text-align:center;padding:40px;color:var(--mt);font-size:12px;font-family:var(--mono)}
+
+/* ── SETTINGS ── */
+.set-wrap{display:grid;grid-template-columns:190px 1fr;gap:14px}
+.set-nav{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:7px}
+.sni{padding:8px 12px;border-radius:7px;cursor:pointer;font-size:12px;font-weight:500;color:var(--t2);transition:all .13s;display:flex;align-items:center;gap:7px;margin-bottom:2px}
+.sni:hover{background:var(--sf2);color:var(--tx)}
+.sni.on{background:var(--acbg);color:var(--ac);font-weight:700}
+.set-panel{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:22px}
+.sp{display:none}.sp.on{display:block;animation:fi .18s}
+.set-h{font-size:17px;font-weight:800;color:var(--tx);margin-bottom:2px;letter-spacing:-.2px}
+.set-sub{font-size:12px;color:var(--t2);margin-bottom:20px;font-family:var(--mono)}
+.set-sec{margin-bottom:20px}
+.set-sec-ttl{font-size:9px;font-weight:700;color:var(--mt);letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;padding-bottom:7px;border-bottom:1px solid var(--bd);font-family:var(--mono)}
+.set-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--bd)}
+.set-row:last-child{border-bottom:none}
+.sr-name{font-size:13px;font-weight:600;color:var(--tx)}
+.sr-desc{font-size:11px;color:var(--mt);margin-top:1px}
+.tog{width:36px;height:20px;border-radius:10px;background:var(--bd2);position:relative;cursor:pointer;transition:background .18s;flex-shrink:0;border:none}
+.tog.on{background:var(--ac)}
+.tog::after{content:'';position:absolute;top:2px;left:2px;width:16px;height:16px;background:#fff;border-radius:50%;transition:transform .18s;box-shadow:0 1px 3px rgba(0,0,0,.3)}
+.tog.on::after{transform:translateX(16px)}
+.swatches{display:flex;gap:7px;flex-wrap:wrap;margin-top:7px}
+.sw{width:28px;height:28px;border-radius:6px;cursor:pointer;border:2.5px solid transparent;transition:all .13s;position:relative}
+.sw.on{border-color:rgba(255,255,255,.35)}
+.sw.on::after{content:'✓';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff;font-weight:800}
+.sw:hover{transform:scale(1.12)}
+.set-inp{background:var(--sf2);border:1px solid var(--bd);border-radius:7px;color:var(--tx);font-family:var(--mono);font-size:12px;padding:8px 11px;outline:none;width:100%;max-width:250px}
+.set-inp:focus{border-color:var(--ac)}
+.save-btn{padding:9px 20px;background:var(--ac);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;transition:all .15s;margin-top:12px;font-family:var(--fn)}
+.save-btn:hover{opacity:.9;box-shadow:0 4px 14px rgba(99,102,241,.3)}
+.dbtn{padding:7px 14px;background:var(--rdbg);color:var(--rd);border:1px solid var(--rdbd);border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;transition:all .13s;font-family:var(--fn)}
+.dbtn:hover{background:var(--rd);color:#fff}
+
+@media(max-width:1100px){.dash-wrap{grid-template-columns:1fr}.rcol{display:none}.stat-grid{grid-template-columns:repeat(2,1fr)}.num-2col{grid-template-columns:1fr}.lpan.on{grid-template-columns:1fr}}
+@media(max-width:800px){.mods{grid-template-columns:repeat(2,1fr)}.set-wrap{grid-template-columns:1fr}.hero-stats{display:none}}
+@media(max-width:520px){.mods{grid-template-columns:1fr}.qdial-row{flex-direction:column}}
+</style>
+</head>
+<body>
+
+<!-- ONBOARD -->
+<div id="ob">
+  <div class="ob-glow ob-glow1"></div>
+  <div class="ob-glow ob-glow2"></div>
+  <div class="ob-card">
+    <div class="ob-logo">
+      <div class="ob-shield">
+        <div class="ob-pulse"></div>
+        <div class="ob-ring-outer"></div>
+        <div class="ob-shield-inner">🛡</div>
+      </div>
+      <div class="ob-title">Digital <em>Bandhu</em></div>
+      <div class="ob-tagline">SENTINEL COMMAND · CYBER SAFETY</div>
+    </div>
+
+    <label class="ob-label">Your Name <span class="ob-req">*</span></label>
+    <input class="ob-input" id="ob-name" type="text" placeholder="Enter your name…" autocomplete="name" spellcheck="false" maxlength="50"/>
+
+    <div class="ob-or">optional — fill if you want</div>
+
+    <label class="ob-label">Email Address</label>
+    <input class="ob-input" id="ob-email" type="email" placeholder="your@email.com" autocomplete="email" maxlength="100"/>
+
+    <label class="ob-label">Phone / WhatsApp</label>
+    <input class="ob-input" id="ob-phone" type="tel" placeholder="+91 98765 43210" autocomplete="tel" maxlength="20" style="margin-bottom:6px"/>
+
+    <div class="ob-err" id="ob-err"></div>
+
+    <button class="ob-cta" onclick="startApp()">Enter Sentinel →</button>
+    <span class="ob-skip" onclick="startApp(true)">Skip — explore as guest</span>
+
+    <div class="ob-credits">
+      <div class="ob-by">Made by <strong>Hack_Virus</strong></div>
+      <div class="ob-dev">Mohima Banerjee · Digital Bandhu v2.0 · India 🇮🇳</div>
+    </div>
+  </div>
+</div>
+
+<!-- APP SHELL -->
+<div class="shell" id="app" style="display:none">
+
+<aside class="sb">
+  <div class="sb-brand">
+    <div class="sb-ico">🛡</div>
+    <div><div class="sb-name">Digital Bandhu</div><div class="sb-ver">SENTINEL v2.0</div></div>
+  </div>
+  <div class="sb-section">
+    <div class="sb-sec-lbl">Main</div>
+    <div class="nav on" onclick="pg('dashboard',this)"><span class="nav-i">⬡</span>Dashboard</div>
+    <div class="nav" onclick="pg('intel',this)"><span class="nav-i">🧠</span>Intelligence<span class="nbadge nb-r">5</span></div>
+    <div class="nav" onclick="pg('laws',this)"><span class="nav-i">⚖</span>Cyber Laws<span class="nbadge nb-b">NEW</span></div>
+    <div class="nav" onclick="pg('numbers',this)"><span class="nav-i">📞</span>Cyber Numbers</div>
+    <div class="nav" onclick="pg('history',this)"><span class="nav-i">⏱</span>Scan History<span class="nbadge nb-b" id="nb-hist" style="display:none">0</span></div>
+  </div>
+  <div class="sb-section">
+    <div class="sb-sec-lbl">System</div>
+    <div class="nav" onclick="pg('settings',this)"><span class="nav-i">⚙</span>Settings</div>
+  </div>
+  <div class="sb-bottom">
+    <div class="sb-user" onclick="pg('settings',null)">
+      <div class="sb-av" id="sb-av">DB</div>
+      <div><div class="sb-uname" id="sb-uname">Digital Bandhu</div><div class="sb-urole">SENTINEL · INDIA 🇮🇳</div></div>
+    </div>
+  </div>
+</aside>
+
+<div class="body">
+  <div class="topbar">
+    <div class="tb-title" id="tb-title">Dashboard</div>
+    <div class="tb-sep"></div>
+    <div class="tb-search"><span style="color:var(--mt);font-size:11px">⌕</span><input type="text" placeholder="Search…"/></div>
+    <div class="tb-right">
+      <div class="tb-live"><div class="tb-dot"></div>Live</div>
+      <div class="tb-clock" id="clock">--:--:--</div>
+      <div class="tbtn" onclick="toggleTheme()" title="Theme">🌓</div>
+      <div class="tbtn" onclick="pg('settings',null)">⚙</div>
+    </div>
+  </div>
+
+  <div class="ws"><div class="inner">
+
+  <!-- DASHBOARD -->
+  <div class="page on" id="pg-dashboard">
+    <div class="hero">
+      <div class="hero-left">
+        <div class="hero-badge">⚡ SENTINEL COMMAND · 2026</div>
+        <div class="hero-title">Sentinel <span>Command</span></div>
+        <div class="hero-desc">AI-powered fraud detection across India's digital ecosystem — scam messages, phishing URLs, UPI fraud, fake news &amp; deepfakes.</div>
+      </div>
+      <div class="hero-stats">
+        <div class="hstat"><div class="hstat-v g" id="hs-scans">0</div><div class="hstat-l">SCANS</div></div>
+        <div class="hstat"><div class="hstat-v b">98%</div><div class="hstat-l">ACCURACY</div></div>
+        <div class="hstat"><div class="hstat-v r" id="hs-threats">0</div><div class="hstat-l">THREATS</div></div>
+      </div>
+    </div>
+    <div class="alert-bar">⚠ Active: "Indus-Pay" UPI spoofing campaign across India · Compliant: IT Act 2000 · DPDP 2023 · BNS 2023</div>
+
+    <div class="dash-wrap">
+      <div>
+        <div class="scope-row">
+          <span class="scope-lbl">Scope:</span>
+          <div class="scope-tabs">
+            <div class="stab on" onclick="scope('all',this)">All</div>
+            <div class="stab" onclick="scope('national',this)">🇮🇳 National</div>
+            <div class="stab" onclick="scope('international',this)">🌍 International</div>
+          </div>
+        </div>
+
+        <div class="mods">
+
+          <!-- 1 Message -->
+          <div class="mod" data-scope="both">
+            <div class="mod-hd"><div class="mod-ico" style="background:#1e2040">📩</div><div><div class="mod-name">Message Analyzer</div><div class="mod-desc">Scam SMS, OTP fraud, phishing</div></div><span class="mod-scope sc-b">BOTH</span></div>
+            <div class="mod-body">
+              <label class="inp-lbl">// paste message</label>
+              <textarea class="inp-ta" id="ta-msg" rows="4" placeholder="Paste suspicious SMS or chat message…"></textarea>
+              <div class="act-row"><button class="scan-btn" onclick="run('msg')">▶ Analyze</button><button class="clr-btn" onclick="clr('msg')">✕</button></div>
+              <div class="err-msg" id="em-msg"></div><div class="scanning" id="sc-msg"><div class="spin"></div>analyzing…</div>
+              <div class="result" id="rs-msg"></div>
+            </div>
+          </div>
+
+          <!-- 2 URL -->
+          <div class="mod" data-scope="both">
+            <div class="mod-hd"><div class="mod-ico" style="background:#0f2040">🌐</div><div><div class="mod-name">URL Scanner</div><div class="mod-desc">Phishing links &amp; malware URLs</div></div><span class="mod-scope sc-b">BOTH</span></div>
+            <div class="mod-body">
+              <label class="inp-lbl">// enter url</label>
+              <input class="inp-si" id="si-url" type="text" placeholder="https://suspicious-link.com/verify"/>
+              <div class="act-row"><button class="scan-btn" onclick="run('url')">▶ Scan URL</button><button class="clr-btn" onclick="clr('url')">✕</button></div>
+              <div class="err-msg" id="em-url"></div><div class="scanning" id="sc-url"><div class="spin"></div>scanning…</div>
+              <div class="result" id="rs-url"></div>
+            </div>
+          </div>
+
+          <!-- 3 UPI -->
+          <div class="mod" data-scope="national">
+            <div class="mod-hd"><div class="mod-ico" style="background:#0f2018">💳</div><div><div class="mod-name">UPI Risk Auditor</div><div class="mod-desc">Verify UPI IDs vs NPCI fraud DB</div></div><span class="mod-scope sc-n">INDIA</span></div>
+            <div class="mod-body">
+              <label class="inp-lbl">// upi id</label>
+              <input class="inp-si" id="si-upi" type="text" placeholder="name@okaxis"/>
+              <div class="act-row"><button class="scan-btn" onclick="run('upi')">▶ Verify UPI</button><button class="clr-btn" onclick="clr('upi')">✕</button></div>
+              <div class="err-msg" id="em-upi"></div><div class="scanning" id="sc-upi"><div class="spin"></div>verifying…</div>
+              <div class="result" id="rs-upi"></div>
+            </div>
+          </div>
+
+          <!-- 4 Image -->
+          <div class="mod" data-scope="both">
+            <div class="mod-hd"><div class="mod-ico" style="background:#201a00">🖼</div><div><div class="mod-name">Image Forensics</div><div class="mod-desc">Detect AI-generated or edited images</div></div><span class="mod-scope sc-b">BOTH</span></div>
+            <div class="mod-body">
+              <label class="inp-lbl">// upload image</label>
+              <div class="up-box" id="ub-img" onclick="document.getElementById('fi-img').click()">
+                <input type="file" id="fi-img" accept="image/*" style="display:none" onchange="filePick(this,'ub-img','ut-img')"/>
+                <div class="up-ico">🖼</div><div class="up-txt" id="ut-img">Click to upload image</div><div class="up-sub">PNG · JPG · WEBP · max 10MB</div>
+              </div>
+              <div class="act-row"><button class="scan-btn" onclick="run('img')">▶ Verify Image</button><button class="clr-btn" onclick="clr('img')">✕</button></div>
+              <div class="err-msg" id="em-img"></div><div class="scanning" id="sc-img"><div class="spin"></div>analyzing…</div>
+              <div class="result" id="rs-img"></div>
+            </div>
+          </div>
+
+          <!-- 5 Video -->
+          <div class="mod" data-scope="both">
+            <div class="mod-hd"><div class="mod-ico" style="background:#200a0a">🎥</div><div><div class="mod-name">Deepfake Detector</div><div class="mod-desc">Detect AI-generated synthetic videos</div></div><span class="mod-scope sc-b">BOTH</span></div>
+            <div class="mod-body">
+              <label class="inp-lbl">// upload video</label>
+              <div class="up-box" id="ub-vid" onclick="document.getElementById('fi-vid').click()">
+                <input type="file" id="fi-vid" accept="video/*" style="display:none" onchange="filePick(this,'ub-vid','ut-vid')"/>
+                <div class="up-ico">🎬</div><div class="up-txt" id="ut-vid">Click to upload video</div><div class="up-sub">MP4 · MOV · AVI · max 50MB</div>
+              </div>
+              <div class="act-row"><button class="scan-btn" onclick="run('vid')">▶ Detect Deepfake</button><button class="clr-btn" onclick="clr('vid')">✕</button></div>
+              <div class="err-msg" id="em-vid"></div><div class="scanning" id="sc-vid"><div class="spin"></div>scanning frames…</div>
+              <div class="result" id="rs-vid"></div>
+            </div>
+          </div>
+
+          <!-- 6 News -->
+          <div class="mod" data-scope="both">
+            <div class="mod-hd"><div class="mod-ico" style="background:#140a20">📰</div><div><div class="mod-name">Fake News Analyzer</div><div class="mod-desc">Verify claims vs credible sources</div></div><span class="mod-scope sc-b">BOTH</span></div>
+            <div class="mod-body">
+              <label class="inp-lbl">// paste headline or article</label>
+              <textarea class="inp-ta" id="ta-news" rows="4" placeholder="Paste news headline, article, or viral claim…"></textarea>
+              <div class="act-row"><button class="scan-btn" onclick="run('news')">▶ Fact-Check</button><button class="clr-btn" onclick="clr('news')">✕</button></div>
+              <div class="err-msg" id="em-news"></div><div class="scanning" id="sc-news"><div class="spin"></div>fact-checking…</div>
+              <div class="result" id="rs-news"></div>
+            </div>
+          </div>
+
+          <!-- 7 Email -->
+          <div class="mod" data-scope="international">
+            <div class="mod-hd"><div class="mod-ico" style="background:#001624">📧</div><div><div class="mod-name">Email Phishing</div><div class="mod-desc">Detect phishing &amp; BEC in emails</div></div><span class="mod-scope sc-i">GLOBAL</span></div>
+            <div class="mod-body">
+              <label class="inp-lbl">// paste email content</label>
+              <textarea class="inp-ta" id="ta-email" rows="4" placeholder="Paste suspicious email body or headers…"></textarea>
+              <div class="act-row"><button class="scan-btn" onclick="run('email')">▶ Scan Email</button><button class="clr-btn" onclick="clr('email')">✕</button></div>
+              <div class="err-msg" id="em-email"></div><div class="scanning" id="sc-email"><div class="spin"></div>scanning…</div>
+              <div class="result" id="rs-email"></div>
+            </div>
+          </div>
+
+          <!-- 8 Voice -->
+          <div class="mod" data-scope="both">
+            <div class="mod-hd"><div class="mod-ico" style="background:#001a1a">📞</div><div><div class="mod-name">Voice/Call Auditor</div><div class="mod-desc">Detect vishing &amp; impersonation calls</div></div><span class="mod-scope sc-b">BOTH</span></div>
+            <div class="mod-body">
+              <label class="inp-lbl">// paste call transcript</label>
+              <textarea class="inp-ta" id="ta-voice" rows="4" placeholder="Paste the call transcript or what was said…"></textarea>
+              <div class="act-row"><button class="scan-btn" onclick="run('voice')">▶ Analyze Call</button><button class="clr-btn" onclick="clr('voice')">✕</button></div>
+              <div class="err-msg" id="em-voice"></div><div class="scanning" id="sc-voice"><div class="spin"></div>analyzing…</div>
+              <div class="result" id="rs-voice"></div>
+            </div>
+          </div>
+
+          <!-- 9 Bank SMS -->
+          <div class="mod" data-scope="national">
+            <div class="mod-hd"><div class="mod-ico" style="background:#001a0a">🏦</div><div><div class="mod-name">Bank SMS Validator</div><div class="mod-desc">Validate RBI SMS &amp; OTP patterns</div></div><span class="mod-scope sc-n">INDIA</span></div>
+            <div class="mod-body">
+              <label class="inp-lbl">// paste bank sms</label>
+              <textarea class="inp-ta" id="ta-bank" rows="4" placeholder="Paste bank SMS, OTP message or alert…"></textarea>
+              <div class="act-row"><button class="scan-btn" onclick="run('bank')">▶ Validate SMS</button><button class="clr-btn" onclick="clr('bank')">✕</button></div>
+              <div class="err-msg" id="em-bank"></div><div class="scanning" id="sc-bank"><div class="spin"></div>validating…</div>
+              <div class="result" id="rs-bank"></div>
+            </div>
+          </div>
+
+        </div><!-- /mods -->
+      </div><!-- /left -->
+
+      <div class="rcol">
+        <div class="rp">
+          <div class="rp-hd"><div class="rp-ttl">⏱ Live Feed</div><div class="rpill" style="background:var(--gnbg);color:var(--gn);border:1px solid var(--gnbd)">LIVE</div></div>
+          <div class="rp-body" id="live-feed">
+            <div class="feed-row"><div class="fdot fd-g"></div><div><div class="fval">upi.shop@okaxis</div><div class="ftime">Safe · 2m ago</div></div></div>
+            <div class="feed-row"><div class="fdot fd-r"></div><div><div class="fval">sbi-verify.tk/login</div><div class="ftime">HIGH · 4m ago</div></div></div>
+            <div class="feed-row"><div class="fdot fd-y"></div><div><div class="fval">whatsapp_fwd.jpg</div><div class="ftime">Medium · 9m ago</div></div></div>
+            <div class="feed-row"><div class="fdot fd-g"></div><div><div class="fval">sbi.co.in/netbanking</div><div class="ftime">Safe · 15m ago</div></div></div>
+          </div>
+        </div>
+        <div class="rp">
+          <div class="rp-hd"><div class="rp-ttl">⚡ Active Threats</div><div class="rpill" style="background:var(--rdbg);color:var(--rd);border:1px solid var(--rdbd)">ALERT</div></div>
+          <div class="rp-body">
+            <div class="tc"><div class="tc-tag">💳 UPI FRAUD</div><div class="tc-ttl">"Indus-Pay" Phishing</div><div class="tc-desc">UPI spoofing targeting festival payments across India.</div></div>
+            <div class="tc" style="background:linear-gradient(135deg,#1c1917,#252220)"><div class="tc-tag" style="color:#fca5a5">📰 FAKE NEWS</div><div class="tc-ttl">PM Scheme Scam</div><div class="tc-desc">Fake PM scheme requesting Aadhaar + bank details.</div></div>
+          </div>
+        </div>
+        <div class="rp">
+          <div class="rp-hd"><div class="rp-ttl">⚖ Legal Quick Ref</div><div class="rpill" style="background:var(--acbg);color:var(--ac);border:1px solid rgba(99,102,241,.3)">INDIA</div></div>
+          <div class="rp-body">
+            <div class="qr"><div class="qn">UPI Fraud</div><div class="ql">BNS §318</div><span class="qsev qs-h">HIGH</span></div>
+            <div class="qr"><div class="qn">Identity Theft</div><div class="ql">IT §66C</div><span class="qsev qs-h">HIGH</span></div>
+            <div class="qr"><div class="qn">Deepfake</div><div class="ql">IT §66E</div><span class="qsev qs-h">HIGH</span></div>
+            <div class="qr"><div class="qn">Fake News</div><div class="ql">BNS §353</div><span class="qsev qs-m">MED</span></div>
+            <div class="qr"><div class="qn">Data Breach</div><div class="ql">DPDP 2023</div><span class="qsev qs-h">HIGH</span></div>
+            <div style="margin-top:10px;padding:9px 12px;background:var(--rdbg);border:1px solid var(--rdbd);border-radius:7px;text-align:center;font-size:12px;color:var(--rd);font-weight:700;font-family:var(--mono)">🆘 1930 · cybercrime.gov.in</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><!-- /dashboard -->
+
+  <!-- INTELLIGENCE -->
+  <div class="page" id="pg-intel">
+    <div class="ph"><h2>🧠 Intelligence Center</h2><p>Real-time threat landscape · India &amp; Global 2026</p></div>
+    <div class="stat-grid">
+      <div class="stat-c"><div class="sc-top"><div class="sc-ttl">Threats Blocked</div><div class="rpill" style="background:var(--gnbg);color:var(--gn);border:1px solid var(--gnbd)">LIVE</div></div><div class="sc-val" style="color:var(--gn)">1,104</div><div class="sc-sub">+18% vs yesterday</div><div class="sc-bar"><div class="sc-fill" style="width:78%;background:var(--gn)"></div></div></div>
+      <div class="stat-c"><div class="sc-top"><div class="sc-ttl">Active Botnets</div><div class="rpill" style="background:var(--rdbg);color:var(--rd);border:1px solid var(--rdbd)">CRITICAL</div></div><div class="sc-val" style="color:var(--rd)">14</div><div class="sc-sub">3 targeting India banking</div><div class="sc-bar"><div class="sc-fill" style="width:35%;background:var(--rd)"></div></div></div>
+      <div class="stat-c"><div class="sc-top"><div class="sc-ttl">Safe Reports</div><div class="rpill" style="background:var(--acbg);color:var(--ac);border:1px solid rgba(99,102,241,.3)">24H</div></div><div class="sc-val">4,187</div><div class="sc-sub">5,291 total scans today</div><div class="sc-bar"><div class="sc-fill" style="width:82%;background:var(--ac)"></div></div></div>
+      <div class="stat-c"><div class="sc-top"><div class="sc-ttl">UPI Fraud Attempts</div><div class="rpill" style="background:var(--ylbg);color:var(--yl);border:1px solid var(--ylbd)">TODAY</div></div><div class="sc-val" style="color:var(--yl)">892</div><div class="sc-sub">Indus-Pay campaign active</div><div class="sc-bar"><div class="sc-fill" style="width:62%;background:var(--yl)"></div></div></div>
+      <div class="stat-c"><div class="sc-top"><div class="sc-ttl">Deepfakes Detected</div><div class="rpill" style="background:var(--rdbg);color:var(--rd);border:1px solid var(--rdbd)">AI</div></div><div class="sc-val" style="color:var(--rd)">37</div><div class="sc-sub">23 political, 14 financial</div><div class="sc-bar"><div class="sc-fill" style="width:25%;background:var(--rd)"></div></div></div>
+      <div class="stat-c"><div class="sc-top"><div class="sc-ttl">Security Health</div><div class="rpill" style="background:var(--gnbg);color:var(--gn);border:1px solid var(--gnbd)">OPTIMAL</div></div><div class="sc-val" style="color:var(--gn)">98.4%</div><div class="sc-sub">All systems operational</div><div class="sc-bar"><div class="sc-fill" style="width:98%;background:var(--gn)"></div></div></div>
+    </div>
+    <div class="thr-grid">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px"><div style="font-size:14px;font-weight:800;color:var(--tx)">Active Threat Feed</div><div class="rpill" style="background:var(--rdbg);color:var(--rd);border:1px solid var(--rdbd)">5 ACTIVE</div></div>
+      <div class="tr-row"><div class="tr-ico">💳</div><div style="flex:1"><div class="tr-name">"Indus-Pay" UPI Phishing Campaign</div><div class="tr-desc">VPA spoofing targeting festival payments. 892 attempts across Maharashtra, UP, Bihar.</div></div><div class="tr-right"><span class="tr-lv" style="background:var(--rdbg);color:var(--rd);border:1px solid var(--rdbd)">CRITICAL</span><div class="tr-time">2m ago</div></div></div>
+      <div class="tr-row"><div class="tr-ico">📰</div><div style="flex:1"><div class="tr-name">PM Kisan Fake Scheme Chain</div><div class="tr-desc">Fabricated messages requesting Aadhaar, PAN &amp; bank details for "extra benefit".</div></div><div class="tr-right"><span class="tr-lv" style="background:var(--rdbg);color:var(--rd);border:1px solid var(--rdbd)">HIGH</span><div class="tr-time">18m ago</div></div></div>
+      <div class="tr-row"><div class="tr-ico">🎭</div><div style="flex:1"><div class="tr-name">Political Deepfake Video Campaign</div><div class="tr-desc">23 deepfake videos promoting fake investment schemes on Telegram &amp; YouTube Shorts.</div></div><div class="tr-right"><span class="tr-lv" style="background:var(--ylbg);color:var(--yl);border:1px solid var(--ylbd)">MEDIUM</span><div class="tr-time">1h ago</div></div></div>
+      <div class="tr-row"><div class="tr-ico">🌐</div><div style="flex:1"><div class="tr-name">HDFC Bank Lookalike Domain Wave</div><div class="tr-desc">14 newly registered domains mimicking HDFC login pages. SSL mismatch confirmed.</div></div><div class="tr-right"><span class="tr-lv" style="background:var(--rdbg);color:var(--rd);border:1px solid var(--rdbd)">HIGH</span><div class="tr-time">3h ago</div></div></div>
+      <div class="tr-row"><div class="tr-ico">📱</div><div style="flex:1"><div class="tr-name">SIM Swap Attack Spike — Mumbai</div><div class="tr-desc">340% spike in SIM swap requests in Mumbai circle targeting bank account holders.</div></div><div class="tr-right"><span class="tr-lv" style="background:var(--ylbg);color:var(--yl);border:1px solid var(--ylbd)">MEDIUM</span><div class="tr-time">6h ago</div></div></div>
+    </div>
+  </div>
+
+  <!-- CYBER LAWS -->
+  <div class="page" id="pg-laws">
+    <div class="ph"><h2>⚖ Legal Intelligence</h2><p>India &amp; Global Cyber Legal Framework 2026</p></div>
+    <div class="law-tabs">
+      <div class="ltab on" onclick="swLaw('india',this)">🇮🇳 India</div>
+      <div class="ltab" onclick="swLaw('world',this)">🌍 World</div>
+      <div class="ltab" onclick="swLaw('ai',this)">🤖 AI Laws</div>
+      <div class="ltab" onclick="swLaw('fn',this)">📰 Fake News</div>
+      <div class="ltab" onclick="swLaw('fin',this)">💳 Fintech</div>
+      <div class="ltab" onclick="swLaw('df',this)">🎭 Deepfake</div>
+    </div>
+    <div class="lpan on" id="lp-india">
+      <div class="lc"><div class="lc-hd"><div class="lc-ttl">IT Act 2000 &amp; CERT-In 2022</div><div class="lc-yr">India</div></div><div class="lc-desc">§66 hacking, §66C identity theft, §66E privacy, §66F cyber terrorism. CERT-In: 6-hour incident reporting, 5-year log retention.</div><div class="lc-act"><strong>Protective Action</strong>Report to CERT-In within 6 hours at <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="3950575a505d5c574d795a5c4b4d14505717564b5e175057">[email&#160;protected]</a></div><div class="lc-tags"><span class="lpl">§66C ID Theft</span><span class="lpl">§66E Privacy</span><span class="lpen">Up to Life</span></div></div>
+      <div class="lc"><div class="lc-hd"><div class="lc-ttl">DPDP Act 2023</div><div class="lc-yr">India · Aug 2023</div></div><div class="lc-desc">India's first data protection law. Rights: information, correction, erasure. 72-hour breach notification. Data Protection Board established.</div><div class="lc-act"><strong>Protective Action</strong>Report data breaches within 72 hours to Data Protection Board</div><div class="lc-tags"><span class="lpl">72hr Notice</span><span class="lpl">Right to Erasure</span><span class="lpen">Up to ₹250 Crore</span></div></div>
+      <div class="lc"><div class="lc-hd"><div class="lc-ttl">Bharatiya Nyaya Sanhita 2023</div><div class="lc-yr">India · July 2024</div></div><div class="lc-desc">§318 UPI fraud (old §420), §353 fake news, §354C deepfakes, §356 defamation. Cognizable offences.</div><div class="lc-act"><strong>Protective Action</strong>File FIR at cybercrime.gov.in. Call 1930 within 30 mins for transaction freeze</div><div class="lc-tags"><span class="lpl">§318 UPI Fraud</span><span class="lpl">§353 Fake News</span><span class="lpen">Up to 10 yrs</span></div></div>
+      <div class="lc"><div class="lc-hd"><div class="lc-ttl">IT Rules 2021 &amp; Telecom Act 2023</div><div class="lc-yr">India</div></div><div class="lc-desc">24-hour takedown, 5-hop WhatsApp traceability. Telecom Act §42 SIM fraud, OTT regulation.</div><div class="lc-act"><strong>Protective Action</strong>Report spam to TRAI DND (1909). SIM swap victims — contact operator immediately</div><div class="lc-tags"><span class="lpl">24hr Takedown</span><span class="lpl">§42 SIM Fraud</span><span class="lpen">§79 immunity loss</span></div></div>
+    </div>
+    <div class="lpan" id="lp-world">
+      <div class="lc"><div class="lc-hd"><div class="lc-ttl">🇪🇺 GDPR 2018</div><div class="lc-yr">EU</div></div><div class="lc-desc">World's strongest data law. Rights: access, portability, erasure. 72-hour breach notification. Applies globally for EU citizen data.</div><div class="lc-act"><strong>Protective Action</strong>File complaints at national Data Protection Authority</div><div class="lc-tags"><span class="lpl">Art.17 Erasure</span><span class="lpl">72hr Notice</span><span class="lpen">€20M or 4%</span></div></div>
+      <div class="lc"><div class="lc-hd"><div class="lc-ttl">🇺🇸 CFAA 1986/2008</div><div class="lc-yr">USA</div></div><div class="lc-desc">US federal cybercrime law. Covers hacking, DDoS, ransomware, identity theft. Extraterritorial jurisdiction.</div><div class="lc-act"><strong>Protective Action</strong>Report to FBI IC3 at ic3.gov. Preserve all digital evidence</div><div class="lc-tags"><span class="lpl">Unauthorized Access</span><span class="lpl">§1030 Extortion</span><span class="lpen">Up to 20 yrs</span></div></div>
+      <div class="lc"><div class="lc-hd"><div class="lc-ttl">🌍 Budapest Convention</div><div class="lc-yr">68 Nations · 2001</div></div><div class="lc-desc">First international cybercrime treaty. Harmonizes national laws, enables cross-border evidence sharing and extradition.</div><div class="lc-act"><strong>Protective Action</strong>Contact CERT-In for international coordination via MLA treaties</div><div class="lc-tags"><span class="lpl">Cross-Border</span><span class="lpl">MLA Treaties</span><span class="lpen">68 nations</span></div></div>
+      <div class="lc"><div class="lc-hd"><div class="lc-ttl">🇪🇺 EU Digital Services Act 2022</div><div class="lc-yr">EU · 2023</div></div><div class="lc-desc">VLOPs must assess disinformation risks, provide algorithmic transparency. Applies to Meta, X, YouTube, TikTok.</div><div class="lc-act"><strong>Protective Action</strong>Use DSA trusted flagger system to report disinformation</div><div class="lc-tags"><span class="lpl">Risk Assessment</span><span class="lpl">Transparency</span><span class="lpen">6% global revenue</span></div></div>
+    </div>
+    <div class="lpan" id="lp-ai">
+      <div class="lc"><div class="lc-hd"><div class="lc-ttl">🇪🇺 EU AI Act 2024</div><div class="lc-yr">EU</div></div><div class="lc-desc">World's first comprehensive AI law. Risk tiers: Unacceptable (banned), High-risk (regulated), Limited (transparency labels), Minimal (free).</div><div class="lc-act"><strong>Protective Action</strong>Label AI-generated content. Document accountability chains</div><div class="lc-tags"><span class="lpl">Art.5 Prohibited AI</span><span class="lpl">GPAI Models</span><span class="lpen">€35M or 7%</span></div></div>
+      <div class="lc"><div class="lc-hd"><div class="lc-ttl">🇮🇳 IndiaAI Mission 2024</div><div class="lc-yr">MeitY</div></div><div class="lc-desc">₹10,372 crore AI mission. Platforms must label AI-generated content. Watermarking and bias audits mandated.</div><div class="lc-act"><strong>Protective Action</strong>Report unlabeled AI content to MeitY grievance channels</div><div class="lc-tags"><span class="lpl">AI Watermarking</span><span class="lpl">Bias Audits</span><span class="lpen">§79 liability</span></div></div>
+      <div class="lc"><div class="lc-hd"><div class="lc-ttl">🇨🇳 China AIGC 2023</div><div class="lc-yr">China</div></div><div class="lc-desc">World's first binding generative AI regulation. Mandatory watermarking, CAC security assessments, real-name registration.</div><div class="lc-act"><strong>Protective Action</strong>All AI systems in China must register with CAC before deployment</div><div class="lc-tags"><span class="lpl">Mandatory Watermark</span><span class="lpl">CAC Assessment</span><span class="lpen">¥100K + ban</span></div></div>
+      <div class="lc"><div class="lc-hd"><div class="lc-ttl">🌐 UNESCO AI Ethics 2021</div><div class="lc-yr">193 Nations</div></div><div class="lc-desc">Global normative AI ethics framework. Covers transparency, fairness, accountability, human oversight.</div><div class="lc-act"><strong>Protective Action</strong>Align AI development with UNESCO principles</div><div class="lc-tags"><span class="lpl">Transparency</span><span class="lpl">Accountability</span><span class="lpen">Non-binding</span></div></div>
+    </div>
+    <div class="lpan" id="lp-fn">
+      <div class="lc"><div class="lc-hd"><div class="lc-ttl">🇮🇳 IT Rules 2021 — Fake News</div><div class="lc-yr">India</div></div><div class="lc-desc">Platforms must remove flagged fake news within 24 hours. PIB fact-check unit flags government misinformation. WhatsApp 5-hop traceability.</div><div class="lc-act"><strong>Protective Action</strong>Report to platform Grievance Officer. Escalate to cybercrime.gov.in if no action in 24h</div><div class="lc-tags"><span class="lpl">24hr Takedown</span><span class="lpl">PIB Fact-check</span><span class="lpen">§79 immunity loss</span></div></div>
+      <div class="lc"><div class="lc-hd"><div class="lc-ttl">🇮🇳 BNS §353</div><div class="lc-yr">India · BNS 2023</div></div><div class="lc-desc">Criminalizes publishing false information causing public fear. Used in COVID misinformation prosecutions. Cognizable offence.</div><div class="lc-act"><strong>Protective Action</strong>Verify at AltNews.in or FactCheck.in. File FIR if targeted</div><div class="lc-tags"><span class="lpl">Public Mischief</span><span class="lpl">Cognizable</span><span class="lpen">Up to 5 yrs</span></div></div>
+      <div class="lc"><div class="lc-hd"><div class="lc-ttl">🇸🇬 POFMA 2019</div><div class="lc-yr">Singapore</div></div><div class="lc-desc">Ministers can issue correction notices or takedown orders for false statements online.</div><div class="lc-act"><strong>Protective Action</strong>Comply with correction direction orders immediately</div><div class="lc-tags"><span class="lpl">Correction Orders</span><span class="lpl">Ministerial Powers</span><span class="lpen">S$500K / 10 yrs</span></div></div>
+      <div class="lc"><div class="lc-hd"><div class="lc-ttl">🇩🇪 NetzDG + 🇪🇺 DSA</div><div class="lc-yr">Germany / EU 2023</div></div><div class="lc-desc">24-hour removal for clearly illegal content. EU DSA expanded globally with disinformation risk assessments.</div><div class="lc-act"><strong>Protective Action</strong>Use DSA trusted flaggers. Escalate to national authority if platforms fail</div><div class="lc-tags"><span class="lpl">24hr Removal</span><span class="lpl">Risk Assessment</span><span class="lpen">€50M / 6%</span></div></div>
+    </div>
+    <div class="lpan" id="lp-fin">
+      <div class="lc"><div class="lc-hd"><div class="lc-ttl">🇮🇳 Cyber Crime Helpline 1930</div><div class="lc-yr">India · MHA</div></div><div class="lc-desc">Dedicated financial fraud helpline. Immediate reporting can freeze transactions. Golden window: first 30 minutes.</div><div class="lc-act"><strong>Protective Action</strong>Call 1930 IMMEDIATELY. Provide TxnID, UPI handle, amount, time</div><div class="lc-tags"><span class="lpl">Call 1930</span><span class="lpl">30-min window</span><span class="lpen">Time-sensitive</span></div></div>
+      <div class="lc"><div class="lc-hd"><div class="lc-ttl">🇮🇳 RBI Zero-Liability</div><div class="lc-yr">India · PSS Act</div></div><div class="lc-desc">Zero liability for unauthorized transactions reported within 3 days. NPCI operates dispute mechanism.</div><div class="lc-act"><strong>Protective Action</strong>Report within 3 days for zero liability. File at cms.rbi.org.in</div><div class="lc-tags"><span class="lpl">Zero Liability (0-3 days)</span><span class="lpl">NPCI Dispute</span><span class="lpen">Customer right</span></div></div>
+      <div class="lc"><div class="lc-hd"><div class="lc-ttl">🇮🇳 PMLA 2002 (2023)</div><div class="lc-yr">India</div></div><div class="lc-desc">Targets money laundering via UPI mule accounts. Banks must file STR to FIU-IND within 7 days.</div><div class="lc-act"><strong>Protective Action</strong>Report mule accounts to bank. Contact FIU-IND at fiuindia.gov.in</div><div class="lc-tags"><span class="lpl">STR Filing (7 days)</span><span class="lpl">FIU-IND</span><span class="lpen">3-10 yrs + seizure</span></div></div>
+      <div class="lc"><div class="lc-hd"><div class="lc-ttl">🌐 PCI-DSS v4.0 &amp; EU PSD2</div><div class="lc-yr">Global</div></div><div class="lc-desc">PCI-DSS: 12 requirements for cardholder data. PSD2: Strong Customer Authentication mandatory.</div><div class="lc-act"><strong>Protective Action</strong>Maintain PCI-DSS compliance. Non-compliance post-breach = forensic audit</div><div class="lc-tags"><span class="lpl">SCA Required</span><span class="lpl">12 Requirements</span><span class="lpen">$100K/month</span></div></div>
+    </div>
+    <div class="lpan" id="lp-df">
+      <div class="lc"><div class="lc-hd"><div class="lc-ttl">🇮🇳 MeitY Deepfake Advisory</div><div class="lc-yr">India · Nov 2023</div></div><div class="lc-desc">Platforms: remove in 24 hours. Victims: FIR under IT §66E + BNS §354C + §67A.</div><div class="lc-act"><strong>Protective Action</strong>File FIR at cybercrime.gov.in citing IT §66E. Demand 24h takedown</div><div class="lc-tags"><span class="lpl">24hr Removal</span><span class="lpl">IT §66E</span><span class="lpen">3–7 yrs</span></div></div>
+      <div class="lc"><div class="lc-hd"><div class="lc-ttl">🇺🇸 DEFIANCE Act 2024</div><div class="lc-yr">USA</div></div><div class="lc-desc">Victims can sue creators of non-consensual intimate deepfakes. Platforms: safe harbour if removed within 48 hours.</div><div class="lc-act"><strong>Protective Action</strong>File civil lawsuit. Notify platform citing 48-hour safe harbour</div><div class="lc-tags"><span class="lpl">Civil Liability</span><span class="lpl">48hr Safe Harbour</span><span class="lpen">$150K/violation</span></div></div>
+      <div class="lc"><div class="lc-hd"><div class="lc-ttl">🇪🇺 EU AI Act Art.50</div><div class="lc-yr">EU · 2024</div></div><div class="lc-desc">All AI-generated deepfakes must be clearly labeled. Exception for satire with adequate disclosure.</div><div class="lc-act"><strong>Protective Action</strong>Report unlabeled deepfakes to national AI authority</div><div class="lc-tags"><span class="lpl">Mandatory Labels</span><span class="lpl">Biometric Disclosure</span><span class="lpen">€15M or 3%</span></div></div>
+      <div class="lc"><div class="lc-hd"><div class="lc-ttl">🇨🇳 China Deep Synthesis 2023</div><div class="lc-yr">China · Jan 2023</div></div><div class="lc-desc">World's first dedicated deepfake law. Mandatory watermarking. Real-name registration for creators.</div><div class="lc-act"><strong>Protective Action</strong>Report deepfakes to CAC. Creators without watermarks face ban</div><div class="lc-tags"><span class="lpl">Mandatory Watermark</span><span class="lpl">Real-name Registration</span><span class="lpen">Fine + ban</span></div></div>
+    </div>
+  </div>
+
+  <!-- CYBER NUMBERS -->
+  <div class="page" id="pg-numbers">
+    <div class="ph"><h2>📞 Cyber Emergency Contacts</h2><p>India &amp; International — save before you need them</p></div>
+    <div class="qdial-row">
+      <button class="qdial" style="background:linear-gradient(135deg,#dc2626,#b91c1c)" onclick="dial('1930')">🆘 1930 <span>Cyber Helpline</span></button>
+      <button class="qdial" style="background:linear-gradient(135deg,#1d4ed8,#1e40af)" onclick="dial('100')">👮 100 <span>Police</span></button>
+      <button class="qdial" style="background:linear-gradient(135deg,#059669,#047857)" onclick="dial('1098')">👶 1098 <span>Childline</span></button>
+      <button class="qdial" style="background:linear-gradient(135deg,#d97706,#b45309)" onclick="dial('1909')">📱 1909 <span>TRAI Spam</span></button>
+      <button class="qdial" style="background:linear-gradient(135deg,#6366f1,#4338ca)" onclick="openUrl('https://cybercrime.gov.in')">🌐 cybercrime.gov.in</button>
+    </div>
+    <div class="num-2col">
+      <div>
+        <div class="num-sec-lbl">🇮🇳 India — National</div>
+        <div class="ni"><div class="ni-ico">🆘</div><div><div class="ni-num">1930</div><div class="ni-name">Cyber Crime Helpline</div><div class="ni-sub">Financial fraud · 24/7 · 30-min freeze</div></div><button class="ni-btn" style="background:var(--rd);color:#fff" onclick="dial('1930')">📞 Call</button></div>
+        <div class="ni"><div class="ni-ico">🌐</div><div><div class="ni-num">cybercrime.gov.in</div><div class="ni-name">Cyber Crime Portal</div><div class="ni-sub">Online FIR · Track complaint</div></div><button class="ni-btn" style="background:var(--ac);color:#fff" onclick="openUrl('https://cybercrime.gov.in')">🌐 Open</button></div>
+        <div class="ni"><div class="ni-ico">🏛️</div><div><div class="ni-num">1800-11-0006</div><div class="ni-name">CERT-In Helpline</div><div class="ni-sub">Security incidents · Vulnerabilities</div></div><button class="ni-btn" style="background:var(--rd);color:#fff" onclick="dial('18001100006')">📞 Call</button></div>
+        <div class="ni"><div class="ni-ico">📱</div><div><div class="ni-num">1909</div><div class="ni-name">TRAI DND</div><div class="ni-sub">Spam SMS · Phishing calls</div></div><button class="ni-btn" style="background:var(--rd);color:#fff" onclick="dial('1909')">📞 Call</button></div>
+        <div class="ni"><div class="ni-ico">🏦</div><div><div class="ni-num">1800-120-1740</div><div class="ni-name">NPCI UPI Dispute</div><div class="ni-sub">Unauthorized UPI transactions</div></div><button class="ni-btn" style="background:var(--rd);color:#fff" onclick="dial('18001201740')">📞 Call</button></div>
+        <div class="ni"><div class="ni-ico">💰</div><div><div class="ni-num">cms.rbi.org.in</div><div class="ni-name">RBI Ombudsman</div><div class="ni-sub">Bank fraud · UPI non-reversal</div></div><button class="ni-btn" style="background:var(--ac);color:#fff" onclick="openUrl('https://cms.rbi.org.in')">🌐 Open</button></div>
+        <div class="ni"><div class="ni-ico">👶</div><div><div class="ni-num">1098</div><div class="ni-name">Childline</div><div class="ni-sub">Online child exploitation · POCSO</div></div><button class="ni-btn" style="background:var(--rd);color:#fff" onclick="dial('1098')">📞 Call</button></div>
+        <div class="ni"><div class="ni-ico">👮</div><div><div class="ni-num">100</div><div class="ni-name">Police Emergency</div><div class="ni-sub">Physical threats · Extortion</div></div><button class="ni-btn" style="background:var(--rd);color:#fff" onclick="dial('100')">📞 Call</button></div>
+      </div>
+      <div>
+        <div class="num-sec-lbl">🌍 International</div>
+        <div class="ni"><div class="ni-ico">🇺🇸</div><div><div class="ni-num">ic3.gov</div><div class="ni-name">FBI Internet Crime Center</div><div class="ni-sub">US attacks · BEC · Ransomware</div></div><button class="ni-btn" style="background:var(--ac);color:#fff" onclick="openUrl('https://www.ic3.gov')">🌐 Open</button></div>
+        <div class="ni"><div class="ni-ico">🇪🇺</div><div><div class="ni-num">europol.europa.eu</div><div class="ni-name">Europol EC3</div><div class="ni-sub">Cross-border EU cybercrime</div></div><button class="ni-btn" style="background:var(--ac);color:#fff" onclick="openUrl('https://www.europol.europa.eu')">🌐 Open</button></div>
+        <div class="ni"><div class="ni-ico">🌐</div><div><div class="ni-num">interpol.int</div><div class="ni-name">INTERPOL Cyber</div><div class="ni-sub">International investigations</div></div><button class="ni-btn" style="background:var(--ac);color:#fff" onclick="openUrl('https://www.interpol.int/Crimes/Cybercrime')">🌐 Open</button></div>
+        <div class="ni"><div class="ni-ico">🇬🇧</div><div><div class="ni-num">actionfraud.police.uk</div><div class="ni-name">UK Action Fraud</div><div class="ni-sub">UK fraud reporting</div></div><button class="ni-btn" style="background:var(--ac);color:#fff" onclick="openUrl('https://www.actionfraud.police.uk')">🌐 Open</button></div>
+        <div class="ni"><div class="ni-ico">🇸🇬</div><div><div class="ni-num">scamalert.sg</div><div class="ni-name">Singapore ScamAlert</div><div class="ni-sub">POFMA · Scam checker</div></div><button class="ni-btn" style="background:var(--ac);color:#fff" onclick="openUrl('https://www.scamalert.sg')">🌐 Open</button></div>
+        <div class="ni"><div class="ni-ico">✅</div><div><div class="ni-num">altnews.in</div><div class="ni-name">AltNews Fact-Check</div><div class="ni-sub">Verify fake news reports</div></div><button class="ni-btn" style="background:var(--gn);color:#fff" onclick="openUrl('https://www.altnews.in')">🌐 Open</button></div>
+        <div class="ni"><div class="ni-ico">🔍</div><div><div class="ni-num">factcheck.in</div><div class="ni-name">FactCheck India</div><div class="ni-sub">Political fact-checking</div></div><button class="ni-btn" style="background:var(--gn);color:#fff" onclick="openUrl('https://www.factcheck.in')">🌐 Open</button></div>
+        <div class="ni"><div class="ni-ico">📧</div><div><div class="ni-num"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="c9a0a7aaa0adaca7bd89aaacbbbde4a0a7e7a6bbaee7a0a7">[email&#160;protected]</a></div><div class="ni-name">CERT-In Email</div><div class="ni-sub">International attacks on India</div></div><button class="ni-btn" style="background:var(--ac);color:#fff" onclick="openUrl('mailto:incident@cert-in.org.in')">✉ Email</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HISTORY -->
+  <div class="page" id="pg-history">
+    <div class="ph ph-row">
+      <div><h2>⏱ Scan History</h2><p>All your detection results</p></div>
+      <button class="dbtn" onclick="clearHist()">Clear All</button>
+    </div>
+    <div id="hist-list"><div class="empty">No scans yet. Run a detection from Dashboard.</div></div>
+  </div>
+
+  <!-- SETTINGS -->
+  <div class="page" id="pg-settings">
+    <div class="ph"><h2>⚙ Settings</h2><p>Customize Digital Bandhu</p></div>
+    <div class="set-wrap">
+      <div class="set-nav">
+        <div class="sni on" onclick="swSet('appear',this)">🎨 Appearance</div>
+        <div class="sni" onclick="swSet('profile',this)">👤 Profile</div>
+        <div class="sni" onclick="swSet('notif',this)">🔔 Notifications</div>
+        <div class="sni" onclick="swSet('analysis',this)">🔬 Analysis</div>
+        <div class="sni" onclick="swSet('export',this)">📤 Export</div>
+        <div class="sni" onclick="swSet('about',this)">ℹ About</div>
+        <div class="sni" onclick="swSet('danger',this)" style="color:var(--rd)">⚠ Danger Zone</div>
+      </div>
+      <div class="set-panel">
+
+        <div class="sp on" id="sp-appear">
+          <div class="set-h">Appearance</div><div class="set-sub">Theme &amp; color preferences</div>
+          <div class="set-sec"><div class="set-sec-ttl">Theme</div>
+            <div class="set-row"><div><div class="sr-name">Dark Mode</div></div><button class="tog on" id="dark-tog" onclick="toggleTheme()"></button></div>
+          </div>
+          <div class="set-sec"><div class="set-sec-ttl">Accent Color</div>
+            <div class="swatches">
+              <div class="sw on" style="background:#6366f1" data-c="#6366f1" data-c2="#8b5cf6" onclick="setColor(this)"></div>
+              <div class="sw" style="background:#3b82f6" data-c="#3b82f6" data-c2="#2563eb" onclick="setColor(this)"></div>
+              <div class="sw" style="background:#10b981" data-c="#10b981" data-c2="#059669" onclick="setColor(this)"></div>
+              <div class="sw" style="background:#ef4444" data-c="#ef4444" data-c2="#dc2626" onclick="setColor(this)"></div>
+              <div class="sw" style="background:#f59e0b" data-c="#f59e0b" data-c2="#d97706" onclick="setColor(this)"></div>
+              <div class="sw" style="background:#8b5cf6" data-c="#8b5cf6" data-c2="#7c3aed" onclick="setColor(this)"></div>
+              <div class="sw" style="background:#06b6d4" data-c="#06b6d4" data-c2="#0891b2" onclick="setColor(this)"></div>
+              <div class="sw" style="background:#ec4899" data-c="#ec4899" data-c2="#db2777" onclick="setColor(this)"></div>
+            </div>
+          </div>
+          <button class="save-btn" onclick="toast('✓ Saved')">Save</button>
+        </div>
+
+        <div class="sp" id="sp-profile">
+          <div class="set-h">Profile</div><div class="set-sub">Your account info</div>
+          <div style="display:flex;align-items:center;gap:14px;padding:14px;background:var(--sf2);border-radius:10px;border:1px solid var(--bd);margin-bottom:18px">
+            <div class="sb-av" id="prof-av" style="width:46px;height:46px;font-size:17px">DB</div>
+            <div><div style="font-size:15px;font-weight:800;color:var(--tx)" id="prof-name">Digital Bandhu</div><div style="font-size:10px;color:var(--mt);font-family:var(--mono)">SENTINEL · INDIA 🇮🇳</div></div>
+          </div>
+          <div class="set-sec"><div class="set-sec-ttl">Account</div>
+            <div class="set-row"><div class="sr-name">Name</div><input class="set-inp" id="set-uname" type="text" placeholder="Your name"/></div>
+            <div class="set-row"><div class="sr-name">Email</div><input class="set-inp" id="set-email" type="email" placeholder="your@email.com"/></div>
+            <div class="set-row"><div class="sr-name">Phone</div><input class="set-inp" id="set-phone" type="tel" placeholder="+91 98765 43210"/></div>
+          </div>
+          <button class="save-btn" onclick="saveProfile()">Save Profile</button>
+        </div>
+
+        <div class="sp" id="sp-notif">
+          <div class="set-h">Notifications</div><div class="set-sub">Alert preferences</div>
+          <div class="set-sec"><div class="set-sec-ttl">Alerts</div>
+            <div class="set-row"><div class="sr-name">Critical Threats (HIGH)</div><button class="tog on" onclick="this.classList.toggle('on')"></button></div>
+            <div class="set-row"><div class="sr-name">Medium Risk Warnings</div><button class="tog on" onclick="this.classList.toggle('on')"></button></div>
+            <div class="set-row"><div class="sr-name">Threat Intel Updates</div><button class="tog on" onclick="this.classList.toggle('on')"></button></div>
+            <div class="set-row"><div class="sr-name">Scan Complete Sound</div><button class="tog" onclick="this.classList.toggle('on')"></button></div>
+          </div>
+          <button class="save-btn" onclick="toast('✓ Saved')">Save</button>
+        </div>
+
+        <div class="sp" id="sp-analysis">
+          <div class="set-h">Analysis</div><div class="set-sub">Detection behavior</div>
+          <div class="set-sec"><div class="set-sec-ttl">Detection</div>
+            <div class="set-row"><div class="sr-name">Sensitivity</div><select class="set-inp" style="max-width:160px"><option>Low</option><option selected>Medium</option><option>High</option><option>Paranoid</option></select></div>
+            <div class="set-row"><div><div class="sr-name">Deep Scan Mode</div><div class="sr-desc">Extended analysis</div></div><button class="tog" onclick="this.classList.toggle('on')"></button></div>
+            <div class="set-row"><div><div class="sr-name">Save Scan History</div></div><button class="tog on" onclick="this.classList.toggle('on')"></button></div>
+          </div>
+          <button class="save-btn" onclick="toast('✓ Saved')">Save</button>
+        </div>
+
+        <div class="sp" id="sp-export">
+          <div class="set-h">Export</div><div class="set-sub">Download scan history</div>
+          <div class="set-sec"><div class="set-sec-ttl">Download</div>
+            <div class="set-row"><div class="sr-name">JSON</div><button style="padding:7px 13px;background:var(--acbg);color:var(--ac);border:1px solid rgba(99,102,241,.3);border-radius:6px;font-size:12px;font-weight:700;cursor:pointer" onclick="exportData('json')">⬇ JSON</button></div>
+            <div class="set-row"><div class="sr-name">CSV</div><button style="padding:7px 13px;background:var(--gnbg);color:var(--gn);border:1px solid var(--gnbd);border-radius:6px;font-size:12px;font-weight:700;cursor:pointer" onclick="exportData('csv')">⬇ CSV</button></div>
+            <div class="set-row"><div class="sr-name">Text Report</div><button style="padding:7px 13px;background:var(--ylbg);color:var(--yl);border:1px solid var(--ylbd);border-radius:6px;font-size:12px;font-weight:700;cursor:pointer" onclick="exportData('txt')">⬇ Report</button></div>
+          </div>
+          <div style="padding:10px 12px;background:var(--sf2);border:1px solid var(--bd);border-radius:8px;font-size:11px;color:var(--t2);font-family:var(--mono)">
+            Scans: <strong id="ex-cnt" style="color:var(--tx)">0</strong> · Threats: <strong id="ex-thr" style="color:var(--rd)">0</strong> · Safe: <strong id="ex-saf" style="color:var(--gn)">0</strong>
+          </div>
+        </div>
+
+        <div class="sp" id="sp-about">
+          <div class="set-h">About</div><div class="set-sub">Version &amp; credits</div>
+          <div style="background:linear-gradient(135deg,var(--ac),var(--ac2));border-radius:12px;padding:20px;text-align:center;margin-bottom:18px">
+            <div style="font-size:30px;margin-bottom:7px">🛡</div>
+            <div style="font-size:17px;font-weight:800;color:#fff">Digital Bandhu</div>
+            <div style="font-size:10px;color:rgba(255,255,255,.55);font-family:var(--mono);margin-top:3px">SENTINEL COMMAND v2.0 · MARCH 2026</div>
+          </div>
+          <div class="set-sec"><div class="set-sec-ttl">Info</div>
+            <div class="set-row"><div class="sr-name">Version</div><div style="font-family:var(--mono);font-size:12px;color:var(--t2)">v2.0.0 (Mar 2026)</div></div>
+            <div class="set-row"><div class="sr-name">Made by</div><div style="font-size:14px;font-weight:800;color:var(--ac)">Hack_Virus 🇮🇳</div></div>
+            <div class="set-row"><div class="sr-name">Developer</div><div style="font-size:13px;font-weight:700;color:var(--tx)">Mohima Banerjee</div></div>
+            <div class="set-row"><div class="sr-name">Purpose</div><div style="font-size:12px;color:var(--t2)">Built for Cyber Safety · India</div></div>
+          </div>
+          <div style="padding:11px;background:var(--sf2);border:1px solid var(--bd);border-radius:8px;font-size:11px;color:var(--t2);font-family:var(--mono);line-height:1.65">⚠ Pattern-based analysis for awareness. Not a substitute for professional cybersecurity advice. Always verify independently.</div>
+        </div>
+
+        <div class="sp" id="sp-danger">
+          <div class="set-h" style="color:var(--rd)">⚠ Danger Zone</div><div class="set-sub">Irreversible actions</div>
+          <div style="border:1px solid var(--rdbd);border-radius:10px;padding:16px;background:var(--rdbg)">
+            <div class="set-row"><div><div class="sr-name">Clear Scan History</div><div class="sr-desc">Delete all records</div></div><button class="dbtn" onclick="clearHist();toast('✓ History cleared')">Clear</button></div>
+            <div class="set-row"><div><div class="sr-name">Reset All Settings</div><div class="sr-desc">Restore defaults</div></div><button class="dbtn" onclick="resetAll()">Reset</button></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  </div></div><!-- /inner /ws -->
+  <div class="foot">
+    <span>🛡 Digital Bandhu · Sentinel Command v2.0 · Built for Cyber Safety</span>
+    <span>Made by <strong>Hack_Virus</strong> <span style="opacity:.45;font-size:9px">· Mohima Banerjee</span> 🇮🇳 · © 2026</span>
+  </div>
+</div>
+</div><!-- /shell -->
+
+<div class="toast" id="toast"></div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+// ═══ ONBOARD ═══════════════════════════════════════════════
+(function(){
+  const saved = localStorage.getItem('db_name');
+  if(saved){ boot(saved, localStorage.getItem('db_email')||'', localStorage.getItem('db_phone')||''); return; }
+  ['ob-name','ob-email','ob-phone'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el) el.addEventListener('keydown',e=>{ if(e.key==='Enter') startApp(); });
+  });
+  setTimeout(()=>{ const n=document.getElementById('ob-name'); if(n) n.focus(); },400);
+})();
+
+function startApp(guest){
+  const ne=(document.getElementById('ob-name').value||'').trim();
+  const em=(document.getElementById('ob-email').value||'').trim();
+  const ph=(document.getElementById('ob-phone').value||'').trim();
+  const er=document.getElementById('ob-err');
+  er.textContent=''; document.getElementById('ob-name').classList.remove('err');
+  if(!guest && ne.length<2){
+    er.textContent='Please enter your name (min 2 characters)';
+    document.getElementById('ob-name').classList.add('err');
+    document.getElementById('ob-name').focus(); return;
+  }
+  const n=ne||'Guest';
+  localStorage.setItem('db_name',n);
+  if(em) localStorage.setItem('db_email',em);
+  if(ph) localStorage.setItem('db_phone',ph);
+  boot(n,em,ph);
+}
+
+function boot(name,email,phone){
+  const init=name.split(' ').map(w=>w[0]||'').join('').slice(0,2).toUpperCase()||'DB';
+  document.getElementById('sb-av').textContent=init;
+  document.getElementById('sb-uname').textContent=name;
+  document.getElementById('prof-av').textContent=init;
+  document.getElementById('prof-name').textContent=name;
+  const si=document.getElementById('set-uname'); if(si) si.value=name;
+  const se=document.getElementById('set-email'); if(se&&email) se.value=email;
+  const sp=document.getElementById('set-phone'); if(sp&&phone) sp.value=phone;
+  const ob=document.getElementById('ob');
+  ob.classList.add('ob-hide');
+  setTimeout(()=>{ ob.style.display='none'; document.getElementById('app').style.display='flex'; },300);
+  toast('Welcome, '+name+'! 🛡');
+}
+
+function saveProfile(){
+  const n=(document.getElementById('set-uname').value||'').trim();
+  const e=(document.getElementById('set-email').value||'').trim();
+  const p=(document.getElementById('set-phone').value||'').trim();
+  if(n){ localStorage.setItem('db_name',n); if(e) localStorage.setItem('db_email',e); if(p) localStorage.setItem('db_phone',p); boot(n,e,p); }
+  toast('✓ Profile saved');
+}
+
+// ═══ CLOCK ═══════════════════════════════════════════════
+setInterval(()=>{ const el=document.getElementById('clock'); if(el) el.textContent=new Date().toLocaleTimeString('en-IN',{hour12:false}); },1000);
+
+// ═══ NAVIGATION ══════════════════════════════════════════
+const PG={'dashboard':'Dashboard','intel':'Intelligence Center','laws':'Legal Intelligence','numbers':'Cyber Numbers','history':'Scan History','settings':'Settings'};
+function pg(id,el){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.nav').forEach(n=>n.classList.remove('on'));
+  document.getElementById('pg-'+id).classList.add('on');
+  if(el) el.classList.add('on');
+  document.getElementById('tb-title').textContent=PG[id]||id;
+  if(id==='settings'){
+    const c=document.getElementById('ex-cnt'),t=document.getElementById('ex-thr'),s=document.getElementById('ex-saf');
+    if(c) c.textContent=hist.length;
+    if(t) t.textContent=hist.filter(h=>h.r.level!=='Safe').length;
+    if(s) s.textContent=hist.filter(h=>h.r.level==='Safe').length;
+  }
+}
+
+// ═══ THEME ════════════════════════════════════════════════
+let isDark=true;
+function toggleTheme(){
+  isDark=!isDark;
+  document.documentElement.setAttribute('data-theme',isDark?'dark':'light');
+  const t=document.getElementById('dark-tog'); if(t) t.classList.toggle('on',isDark);
+}
+
+// ═══ ACCENT ══════════════════════════════════════════════
+function setColor(el){
+  document.querySelectorAll('.sw').forEach(s=>s.classList.remove('on'));
+  el.classList.add('on');
+  document.documentElement.style.setProperty('--ac',el.dataset.c);
+  document.documentElement.style.setProperty('--ac2',el.dataset.c2);
+  toast('Color updated');
+}
+
+// ═══ SETTINGS PANELS ════════════════════════════════════
+function swSet(id,el){
+  document.querySelectorAll('.sp').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.sni').forEach(i=>i.classList.remove('on'));
+  document.getElementById('sp-'+id).classList.add('on');
+  el.classList.add('on');
+}
+function swLaw(id,el){
+  document.querySelectorAll('.lpan').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.ltab').forEach(t=>t.classList.remove('on'));
+  const p=document.getElementById('lp-'+id); if(p) p.classList.add('on');
+  el.classList.add('on');
+}
+function resetAll(){
+  if(!confirm('Reset settings?')) return;
+  ['--ac','--ac2'].forEach(v=>document.documentElement.style.removeProperty(v));
+  if(!isDark) toggleTheme();
+  toast('Settings reset');
+}
+
+// ═══ SCOPE FILTER ════════════════════════════════════════
+function scope(sc,el){
+  document.querySelectorAll('.stab').forEach(t=>t.classList.remove('on')); el.classList.add('on');
+  document.querySelectorAll('.mod').forEach(m=>{
+    const s=m.dataset.scope;
+    const show=sc==='all'||(sc==='national'&&(s==='national'||s==='both'))||(sc==='international'&&(s==='international'||s==='both'));
+    m.classList.toggle('hid',!show);
+  });
+}
+
+// ═══ FILE UPLOAD ════════════════════════════════════════
+function filePick(inp,boxId,txtId){
+  if(inp.files&&inp.files[0]){
+    document.getElementById(txtId).textContent='✓ '+inp.files[0].name;
+    document.getElementById(boxId).classList.add('got');
+  }
+}
+
+// ═══ HISTORY ════════════════════════════════════════════
+let hist=[];
+const MOD_ICONS={msg:'📩',url:'🌐',upi:'💳',img:'🖼',vid:'🎥',news:'📰',email:'📧',voice:'📞',bank:'🏦'};
+const MOD_NAMES={msg:'Message',url:'URL',upi:'UPI',img:'Image',vid:'Video',news:'News',email:'Email',voice:'Voice',bank:'Bank SMS'};
+
+function addHist(type,input,result){
+  hist.unshift({type,input:String(input).slice(0,80),r:result,time:new Date().toLocaleTimeString('en-IN',{hour12:false})});
+  const nb=document.getElementById('nb-hist');
+  if(nb){ nb.textContent=hist.length; nb.style.display='block'; }
+  document.getElementById('hs-scans').textContent=hist.length;
+  document.getElementById('hs-threats').textContent=hist.filter(h=>h.r.level==='High').length;
+  renderHist();
+  addFeed(type,input,result);
+}
+
+function renderHist(){
+  const el=document.getElementById('hist-list');
+  if(!hist.length){ el.innerHTML='<div class="empty">No scans yet. Run a detection from Dashboard.</div>'; return; }
+  el.innerHTML=hist.map(h=>{
+    const lc=h.r.level.toLowerCase();const l1=lc[0]==='h'?'h':lc[0]==='m'?'m':'s';
+    return `<div class="hi"><div class="hi-ico">${MOD_ICONS[h.type]||'🔍'}</div><div style="flex:1"><div class="hi-type">${MOD_NAMES[h.type]||h.type}</div><div class="hi-inp">${h.input}</div></div><div class="hi-sc rs-${l1}">${h.r.score}%</div><div style="margin:0 8px"><span class="res-badge rb-${l1}">${h.r.level.toUpperCase()}</span></div><div class="hi-time">${h.time}</div></div>`;
+  }).join('');
+}
+
+function addFeed(type,input,result){
+  const lc=result.level.toLowerCase();const l1=lc[0]==='h'?'r':lc[0]==='m'?'y':'g';
+  const el=document.getElementById('live-feed');
+  if(!el) return;
+  const row=document.createElement('div'); row.className='feed-row';
+  row.innerHTML=`<div class="fdot fd-${l1}"></div><div><div class="fval">${String(input).slice(0,40)}</div><div class="ftime">${result.level} · just now</div></div>`;
+  el.insertBefore(row,el.firstChild);
+  if(el.children.length>6) el.removeChild(el.lastChild);
+}
+
+function clearHist(){
+  hist=[];
+  const nb=document.getElementById('nb-hist'); if(nb) nb.style.display='none';
+  document.getElementById('hs-scans').textContent='0';
+  document.getElementById('hs-threats').textContent='0';
+  renderHist();
+}
+
+// ═══ BACKEND API ════════════════════════════════════════
+// '' = same-origin (Flask). Change to your deployed URL if needed:
+// const API = 'https://your-app.onrender.com';
+const API = '';
+
+// ── Local fallback analyzers (used when backend is offline) ──
+function localAnalyze(type, input){
+  let s=0; let r=[]; const t=(input||'').toLowerCase();
+  if(type==='msg'||type==='email'||type==='bank'){
+    if(/otp|one.?time|passcode|pin|cvv/.test(t)){ s+=22; r.push('Requests OTP/password'); }
+    if(/urgent|immediately|expires|act now|hurry/.test(t)){ s+=14; r.push('Urgency/pressure language'); }
+    if(/click.{0,20}link|verify now|login immediately/.test(t)){ s+=18; r.push('Phishing instruction detected'); }
+    if(/account.{0,20}(block|suspend|terminat)/.test(t)){ s+=20; r.push('Account threat detected'); }
+    if(/you have won|winner|prize|lottery/.test(t)){ s+=16; r.push('Prize/lottery lure'); }
+    if(/kyc.{0,20}(update|verif|expir)/.test(t)){ s+=18; r.push('Fake KYC request'); }
+    if(/https?:\/\/\S+/.test(t)){ s+=6; r.push('Contains URL link'); }
+    if(/dear.{0,10}(customer|user)/.test(t)){ s+=8; r.push('Generic greeting — scam signature'); }
+    if(/otp|one.?time/.test(t)&&/urgent|immediately|block/.test(t)){ s+=15; r.push('OTP + urgency combo — confirmed scam'); }
+  }
+  if(type==='url'){
+    if(/^http:\/\//.test(input) && !/localhost/.test(input)){ s+=12; r.push('No HTTPS — insecure'); }
+    if(/\.(tk|ml|ga|cf|gq|xyz|top|click|buzz|club)$/.test(t)){ s+=22; r.push('Suspicious free TLD'); }
+    if(/login|signin|verify|account|banking|sbi|hdfc|icici|upi/.test(t)){ s+=20; r.push('Banking keyword in domain'); }
+    if(/bit\.ly|tinyurl|goo\.gl/.test(t)){ s+=14; r.push('URL shortener — hides destination'); }
+    if(/@/.test(input)){ s+=18; r.push('@ symbol trick in URL'); }
+    if(/prize|gift|reward|win|free|lucky/.test(t)){ s+=16; r.push('Prize keyword in URL'); }
+  }
+  if(type==='upi'){
+    if(!/^[\w.\-+]+@[\w]+$/.test(input.trim())){ s+=20; r.push('Invalid UPI ID format'); }
+    const hdl=(input.split('@')[1]||'').toLowerCase();
+    const trusted=['okaxis','okhdfcbank','okicici','oksbi','ybl','ibl','upi','paytm','apl','hdfcbank','icici','sbi','kotak','aubank','rbl','pnb'];
+    if(hdl && !trusted.includes(hdl)){ s+=27; r.push('Unrecognized payment handle: @'+hdl); }
+    if(/prize|winner|lottery|reward|claim|lucky|free/.test(input.split('@')[0]||'')){ s+=30; r.push('Scam keyword in UPI name'); }
+  }
+  if(type==='news'){
+    if(/shocking|bombshell|exposed|leaked|government hid/.test(t)){ s+=14; r.push('Sensationalist language'); }
+    if(/share before deleted|forward to|whatsapp forward/.test(t)){ s+=20; r.push('Viral chain forward pressure'); }
+    if(/illuminati|deep state|new world order/.test(t)){ s+=25; r.push('Conspiracy theory indicator'); }
+    if(/reuters|bbc|ndtv|pib\.gov/.test(t)){ s=Math.max(0,s-20); r.push('✓ Credible source cited'); }
+  }
+  if(type==='voice'){
+    if(/this is.{0,20}from (bank|rbi|police|income tax)/.test(t)){ s+=25; r.push('Impersonation of authority'); }
+    if(/do not tell|don.t share|confidential/.test(t)){ s+=18; r.push('Secrecy instruction — red flag'); }
+    if(/verify.{0,20}(otp|pin) over the phone/.test(t)){ s+=25; r.push('Requests sensitive data on call'); }
+    if(/remote.{0,20}(access|control|desktop)/.test(t)){ s+=22; r.push('Remote access request'); }
+    if(/gift card|google play|itunes/.test(t)){ s+=20; r.push('Gift card payment scam'); }
+  }
+  if(type==='img'||type==='vid'){
+    const f=document.getElementById('fi-'+type);
+    const file=f&&f.files&&f.files[0];
+    if(file){
+      const nm=file.name.toLowerCase();
+      if(/deepfake|fake|manipul|edited|photoshop/.test(nm)){ s+=40; r.push('Filename suggests manipulation'); }
+      if(/whatsapp|telegram|forwarded/.test(nm)){ s+=10; r.push('Forwarded via messaging app'); }
+      const seed=file.size%100;
+      if(seed>65){ s+=28; r.push(type==='img'?'Pixel entropy anomaly detected':'Facial jitter pattern detected'); }
+      else if(seed>35){ s+=12; r.push('Minor artifact pattern'); }
+      else { r.push(type==='img'?'Pixel distribution appears natural':'Natural motion detected'); }
+    } else { r.push('No file selected'); s=5; }
+  }
+  s=Math.min(s,99); if(!r.length){ r.push('No fraud patterns detected'); s=5; }
+  const lv=s>=60?'High':s>=30?'Medium':'Safe';
+  const act=lv==='High'?'HIGH RISK — Do NOT click or share OTPs. Report at cybercrime.gov.in or call 1930.':lv==='Medium'?'Caution — Verify through official channels before acting.':'Appears safe. Always verify independently.';
+  return {score:Math.max(s,5),level:lv,reasons:r,action:act};
+}
+
+// ── Run module ────────────────────────────────────────────────
+async function run(type){
+  const inputMap={
+    msg:()=>(document.getElementById('ta-msg').value||'').trim(),
+    url:()=>(document.getElementById('si-url').value||'').trim(),
+    upi:()=>(document.getElementById('si-upi').value||'').trim(),
+    news:()=>(document.getElementById('ta-news').value||'').trim(),
+    email:()=>(document.getElementById('ta-email').value||'').trim(),
+    voice:()=>(document.getElementById('ta-voice').value||'').trim(),
+    bank:()=>(document.getElementById('ta-bank').value||'').trim(),
+    img:()=>{ const f=document.getElementById('fi-img'); return f&&f.files&&f.files[0]?f.files[0].name:''; },
+    vid:()=>{ const f=document.getElementById('fi-vid'); return f&&f.files&&f.files[0]?f.files[0].name:''; },
+  };
+  const apiMap={
+    msg:{ep:'/api/message',body:v=>({text:v}),minLen:5},
+    url:{ep:'/api/url',body:v=>({url:v}),minLen:4},
+    upi:{ep:'/api/upi',body:v=>({upi_id:v}),minLen:3},
+    news:{ep:'/api/news',body:v=>({text:v}),minLen:10},
+    email:{ep:'/api/email',body:v=>({text:v}),minLen:5},
+    voice:{ep:'/api/voice',body:v=>({transcript:v}),minLen:10},
+    bank:{ep:'/api/bank',body:v=>({sms:v}),minLen:5},
+  };
+
+  const input=inputMap[type]?inputMap[type]():'';
+  const em=document.getElementById('em-'+type);
+  const sc=document.getElementById('sc-'+type);
+  const rs=document.getElementById('rs-'+type);
+  const btn=document.querySelector(`#mod-${type==='msg'?'msg':type==='url'?'url':type==='upi'?'upi':type==='img'?'img':type==='vid'?'vid':type==='news'?'news':type==='email'?'email':type==='voice'?'voice':'bank'} .scan-btn`);
+
+  // Validate
+  if(em){ em.textContent=''; em.classList.remove('on'); }
+  if((type==='img'||type==='vid')&&!input){
+    if(em){ em.textContent='Please upload a file first.'; em.classList.add('on'); } return;
+  }
+  const cfg=apiMap[type];
+  if(cfg&&input.length<cfg.minLen){
+    if(em){ em.textContent='Please enter more text (min '+cfg.minLen+' characters).'; em.classList.add('on'); } return;
+  }
+
+  // Show spinner
+  if(sc) sc.classList.add('on');
+  if(btn) btn.disabled=true;
+  if(rs) rs.classList.remove('on');
+
+  let result=null;
+
+  // Try backend
+  if(cfg&&API!==null){
+    try{
+      const res=await fetch(API+cfg.ep,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(cfg.body(input)),signal:AbortSignal.timeout(7000)});
+      if(res.ok){ const d=await res.json(); if(d.success) result=d; }
+    } catch(e){ /* fall through to local */ }
+  }
+
+  // Fallback to local
+  if(!result){ result=localAnalyze(type,input); }
+
+  // Hide spinner, show result
+  if(sc) sc.classList.remove('on');
+  if(btn) btn.disabled=false;
+  showResult(rs,result);
+  addHist(type,input,result);
+}
+
+function showResult(el,d){
+  if(!el) return;
+  const lc=(d.level||'safe').toLowerCase();
+  const l1=lc[0]==='h'?'h':lc[0]==='m'?'m':'s';
+  const uid='b'+Date.now();
+  const reasons=(d.reasons||[]);
+  const action=d.action||'';
+  el.innerHTML=`
+    <div class="res-top">
+      <div><div style="font-size:9px;color:var(--mt);font-family:var(--mono);margin-bottom:2px;letter-spacing:.06em">RISK SCORE</div><div class="res-sc rs-${l1}">${d.score}%</div></div>
+      <span class="res-badge rb-${l1}">${(d.level||'Safe').toUpperCase()} RISK</span>
+    </div>
+    <div class="res-bar"><div class="res-fill rf-${l1}" id="${uid}" style="width:0"></div></div>
+    <div class="res-body">
+      <div class="res-lbl">Signals Detected</div>
+      <div class="tags">${reasons.map(r=>`<span class="tag tag-${r.startsWith('✓')?'s':l1}">${r}</span>`).join('')}</div>
+      <div class="res-lbl">Suggested Action</div>
+      <div class="res-action ra-${l1}">${action}</div>
+    </div>`;
+  el.classList.add('on');
+  requestAnimationFrame(()=>setTimeout(()=>{ const b=document.getElementById(uid); if(b) b.style.width=d.score+'%'; },40));
+}
+
+function clr(type){
+  const targets={msg:'ta-msg',url:'si-url',upi:'si-upi',news:'ta-news',email:'ta-email',voice:'ta-voice',bank:'ta-bank',img:null,vid:null};
+  const tid=targets[type];
+  if(tid){ const el=document.getElementById(tid); if(el){ el.value=''; el.classList.remove('err'); } }
+  if(type==='img'){ document.getElementById('fi-img').value=''; document.getElementById('ut-img').textContent='Click to upload image'; document.getElementById('ub-img').classList.remove('got'); }
+  if(type==='vid'){ document.getElementById('fi-vid').value=''; document.getElementById('ut-vid').textContent='Click to upload video'; document.getElementById('ub-vid').classList.remove('got'); }
+  const rs=document.getElementById('rs-'+type); if(rs) rs.classList.remove('on');
+  const em=document.getElementById('em-'+type); if(em){ em.textContent=''; em.classList.remove('on'); }
+}
+
+// ═══ CALL / DIAL ════════════════════════════════════════
+function dial(number){
+  const clean=number.replace(/\D/g,'');
+  const isMob=/Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+  if(isMob){ window.location.href='tel:+91'+clean; return; }
+  const old=document.getElementById('cm-modal'); if(old) old.remove();
+  const el=document.createElement('div'); el.id='cm-modal'; el.className='cm-bg';
+  el.innerHTML=`<div class="cm-box"><div class="cm-ico">📞</div><div class="cm-lbl">Emergency Number</div><div class="cm-num">${number}</div><div class="cm-sub">Dial on your phone</div><div class="cm-btns"><a class="cm-call" href="tel:+91${clean}">📞 Open Dialer</a><button class="cm-close" onclick="document.getElementById('cm-modal').remove()">Close</button></div></div>`;
+  el.addEventListener('click',e=>{ if(e.target===el) el.remove(); });
+  document.body.appendChild(el);
+}
+
+function openUrl(url){ window.open(url,'_blank','noopener,noreferrer'); }
+
+// ═══ EXPORT ════════════════════════════════════════════
+function exportData(fmt){
+  if(!hist.length){ toast('No scan history to export'); return; }
+  let content,ext,mime;
+  if(fmt==='json'){ content=JSON.stringify(hist,null,2); ext='json'; mime='application/json'; }
+  else if(fmt==='csv'){
+    content='Type,Input,Score,Level,Action,Time\n'+hist.map(h=>`${h.type},"${h.input}",${h.r.score},${h.r.level},"${h.r.action||''}",${h.time}`).join('\n');
+    ext='csv'; mime='text/csv';
+  } else {
+    content='DIGITAL BANDHU — SCAN HISTORY REPORT\n'+'='.repeat(50)+'\n\n'+hist.map((h,i)=>`${i+1}. ${(MOD_NAMES[h.type]||h.type).toUpperCase()} — ${h.r.level}\n   Input: ${h.input}\n   Score: ${h.r.score}% | Time: ${h.time}\n   Reasons: ${(h.r.reasons||[]).join(', ')}\n   Action: ${h.r.action||''}\n`).join('\n');
+    ext='txt'; mime='text/plain';
+  }
+  const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([content],{type:mime})); a.download=`digital-bandhu-export.${ext}`; a.click(); URL.revokeObjectURL(a.href);
+  toast('✓ Exported as .'+ext);
+}
+
+// �
